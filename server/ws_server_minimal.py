@@ -14,9 +14,12 @@ except ImportError:
     raise ImportError("pip install websockets")
 
 # Config
-WS_PORT = 8765
-GPIO_PINS = [17, 27, 22, 23]
-UPDATE_INTERVAL = 1.0
+import config;
+
+GPIO_PINS = config.GPIO_PINS
+WS_PORT = config.WS_PORT
+UPDATE_INTERVAL = config.UPDATE_INTERVAL
+
 
 # Try GPIO, fallback to simulation
 try:

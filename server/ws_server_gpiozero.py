@@ -27,10 +27,13 @@ except ImportError:
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-GPIO_PINS = [17, 27, 22, 23]
-WS_HOST = "0.0.0.0"
-WS_PORT = 8765
-UPDATE_INTERVAL = 1.0
+import config;
+
+GPIO_PINS = config.GPIO_PINS
+WS_HOST = config.WS_HOST
+WS_PORT = config.WS_PORT
+UPDATE_INTERVAL = config.UPDATE_INTERVAL
+# SERIAL_DEVICE = config.SERIAL_DEVICE # unused for now?
 
 clients = set()
 buttons = {}

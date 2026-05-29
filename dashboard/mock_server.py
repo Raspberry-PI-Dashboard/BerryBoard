@@ -29,10 +29,13 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
-DEFAULT_HOST = '0.0.0.0'
-DEFAULT_PORT = 8765
-UPDATE_INTERVAL = 1.0
-GPIO_PINS = [17, 27, 22, 23]
+
+import config;
+
+DEFAULT_HOST = config.WS_HOST
+DEFAULT_PORT = config.WS_PORT
+UPDATE_INTERVAL = config.UPDATE_INTERVAL
+GPIO_PINS = config.GPIO_PINS
 
 clients = set()
 

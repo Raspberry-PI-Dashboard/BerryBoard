@@ -34,11 +34,13 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 # Configuration
-WS_HOST = "0.0.0.0"
-WS_PORT = 8765
-GPIO_PINS = [17, 27, 22, 23]
-SERIAL_DEVICE = "/dev/ttyACM0"
-UPDATE_INTERVAL = 1.0
+import config;
+
+GPIO_PINS = config.GPIO_PINS
+WS_HOST = config.WS_HOST
+WS_PORT = config.WS_PORT
+UPDATE_INTERVAL = config.UPDATE_INTERVAL
+SERIAL_DEVICE = config.SERIAL_DEVICE
 
 # Global state
 clients: Set[WebSocketServerProtocol] = set()
