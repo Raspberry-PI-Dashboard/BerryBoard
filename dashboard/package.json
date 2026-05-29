@@ -8,6 +8,7 @@
     "lint-css": "stylelint dashboard.css",
     "test": "echo \"Error: no test specified\" && exit 1",
     "mock": "python3 mock_server.py && ./serve.sh",
+    "test-mock": "python3 ./mock_server/index.py",
     "start": "./serve.sh"
   },
   "keywords": [],
