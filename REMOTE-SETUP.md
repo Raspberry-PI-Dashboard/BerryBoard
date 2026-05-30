@@ -411,7 +411,6 @@ See [DEPLOYMENT.md](DEPLOYMENT.md#security-considerations) for details.
 | Issue | Solution |
 |-------|----------|
 | No data showing | Server not sending data - check logs |
-| Page keeps refreshing | Try different dashboard version (React/Preact/Vanilla) |
 | Slow updates | Increase UPDATE_INTERVAL in config.py |
 | High CPU usage | Reduce GPIO pins monitored |
 

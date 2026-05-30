@@ -20,9 +20,7 @@ vigilant-carnival/
 │   └── test_server.py                 # Test script
 │
 └── dashboard/                         # Frontend (HTML/JavaScript)
-    ├── index.html                     # ⭐ React dashboard (default)
-    ├── index-preact.html              # Lightweight Preact version
-    ├── index-vanilla.html             # Vanilla JS (no dependencies)
+    ├── index.html                     # ⭐ React dashboard
     ├── dashboard.css                  # Source CSS with Tailwind
     ├── dashboard-built.css            # Built CSS
     ├── tailwind.config.js             # Tailwind configuration
@@ -96,8 +94,6 @@ Visit: **http://localhost:8080**
 | File | Use Case | Size | Dependencies | Best For |
 |------|----------|------|--------------|----------|
 | `index.html` | **Full-featured** | 18 KB | React 18 CDN | Complex applications |
-| `index-preact.html` | **Lightweight** | 3 KB | Preact 10 CDN | Resource-constrained (RPi Zero) |
-| `index-vanilla.html` | **Minimal** | 8 KB | None | Maximum compatibility |
 | `serve.sh` | **Development** | 1 KB | Python 3 | Quick local testing |
 
 ### Root Files
@@ -130,8 +126,8 @@ Visit: **http://localhost:8080**
 ┌────────┴────────┐
 │   Web Browser   │
 │                 │
-│  React/Preact   │
-│   Dashboard     │
+│      React      │
+│    Dashboard    │
 └─────────────────┘
 ```
 
@@ -216,25 +212,6 @@ const wsUrl = "ws://192.168.1.100:8765";  // Modify this line
   - RPi.GPIO doesn't work on your OS
   - Prefer modern `gpiozero` library
   - Newest Raspberry Pi OS versions
-
-### Which Dashboard?
-
-- **`index.html`** ← Default choice
-  - Best UX/features
-  - React 18 (via CDN)
-  - Works great on modern devices
-
-- **`index-preact.html`** - Use if:
-  - Running on Raspberry Pi Zero (very limited resources)
-  - Want to access dashboard from low-power devices
-  - Preact is 6x smaller than React
-
-- **`index-vanilla.html`** - Use if:
-  - Need zero dependencies
-  - Maximum compatibility
-  - Like vanilla JavaScript
-
-All three dashboards connect to the same server!
 
 ---
 
@@ -414,7 +391,6 @@ More help in [QUICKSTART.md Troubleshooting section](QUICKSTART.md#troubleshooti
 - **Raspberry Pi GPIO**: https://www.raspberrypi.com/documentation/computers/raspberry-pi.html
 - **Python WebSockets**: https://websockets.readthedocs.io/
 - **React Documentation**: https://react.dev/
-- **Preact Guide**: https://preactjs.com/guide/
 
 ---
 

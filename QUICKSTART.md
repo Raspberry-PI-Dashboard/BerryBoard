@@ -96,18 +96,6 @@ SERIAL_DEVICE = "/dev/ttyUSB0"  # Change to your device
 SERIAL_BAUDRATE = 115200        # Change if needed
 ```
 
-## Dashboard Variants
-
-Choose the dashboard that best fits your needs:
-
-- **`index.html`** - Full React (18 KB gzipped) - Most features, good for full apps
-- **`index-preact.html`** - Lightweight Preact (3 KB) - For resource-constrained environments
-- **`index-vanilla.html`** - Vanilla JavaScript (no dependencies) - Simplest implementation
-### PC mock server
-
-- **`mock_server.py`** - Run from `dashboard` to simulate GPIO, serial and sensor data for dashboard testing
-All three connect to the same WebSocket server!
-
 ## Troubleshooting
 
 ### "Connection refused"
@@ -135,7 +123,6 @@ python3 ws_server_gpiozero.py
 ### High CPU usage
 - Increase `UPDATE_INTERVAL` in config.py
 - Reduce number of GPIO pins monitored
-- Use Preact dashboard instead of React
 
 ### Serial data not showing
 - Check device: `ls /dev/tty*`
@@ -221,11 +208,10 @@ def read_all_serial_devices():
 
 ### For Raspberry Pi Zero / Older Models
 
-1. **Use Preact dashboard** instead of React
-2. **Increase UPDATE_INTERVAL** to 2-5 seconds
-3. **Reduce GPIO pins** to only what you need
-4. **Disable serial** if not needed
-5. **Use gpiozero**, it's more efficient
+1. **Increase UPDATE_INTERVAL** to 2-5 seconds
+2. **Reduce GPIO pins** to only what you need
+3. **Disable serial** if not needed
+4. **Use gpiozero**, it's more efficient
 
 Example optimized config:
 ```python
