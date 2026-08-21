@@ -1,6 +1,10 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { ShellMessage } from "../ws/message";
-import type { WebSocketMessage } from "../ws/protocol";
+import type {
+  StartupRequest,
+  WebSocketMessage,
+  WebSocketRequest,
+} from "../ws/protocol";
 
 type ConnectionStatus = "Connecting" | "Connected" | "Disconnected" | "Error";
 
@@ -10,7 +14,7 @@ export type UseWebSocketResult = {
   status: ConnectionStatus;
   error: string;
   messages: WebSocketMessage[];
-  sendMessage: (message: ShellMessage) => boolean;
+  sendMessage: (message: WebSocketRequest | ShellMessage) => boolean;
 };
 
 export function getWebSocketUrlError(url: string) {
@@ -44,6 +48,9 @@ export function useWebSocket(initialUrl: string): UseWebSocketResult {
       if (socketRef.current !== socket) return;
       setStatus("Connected");
       setError("");
+
+      const startupRequest: StartupRequest = { type: "startup" };
+      socket.send(JSON.stringify(startupRequest));
     };
     socket.onmessage = (event) => {
       if (socketRef.current !== socket) return;
@@ -83,7 +90,7 @@ export function useWebSocket(initialUrl: string): UseWebSocketResult {
     setUrlState(nextUrl);
   }, []);
 
-  const sendMessage = useCallback((message: ShellMessage) => {
+  const sendMessage = useCallback((message: WebSocketRequest | ShellMessage) => {
     if (socketRef.current?.readyState !== WebSocket.OPEN) return false;
 
     socketRef.current.send(JSON.stringify(message));

@@ -1,4 +1,8 @@
-import type { StartupResponse, WebSocketMessage } from "../ws/protocol";
+import type {
+  ErrorMessage,
+  StartupResponse,
+  WebSocketMessage,
+} from "../ws/protocol";
 import { useWebSocketContext } from "../context/WebSocketContext";
 import { Section, SectionTitle } from "../layouts/Section";
 
@@ -8,9 +12,16 @@ function isStartupResponse(
   return message.type === "startup";
 }
 
+function isStartupCommandError(message: WebSocketMessage): message is ErrorMessage {
+  return message.type === "error" && message.message.toLowerCase().includes("unknown command startup");
+}
+
 export function GpioStatus() {
-  const { messages } = useWebSocketContext();
+  const { messages, status, error } = useWebSocketContext();
   const startup = messages.find(isStartupResponse);
+  const gatewayMismatch =
+    error?.toLowerCase().includes("unknown command startup") ||
+    messages.some(isStartupCommandError);
 
   return (
     <Section>
@@ -18,7 +29,11 @@ export function GpioStatus() {
 
       {!startup ? (
         <p className="text-sm text-slate-400">
-          Waiting for the WebSocket startup response.
+          {gatewayMismatch
+            ? "This endpoint rejected the gateway startup request. Check that the URL points to the WebBerry protocol endpoint, not a shell-only endpoint."
+            : status === "Connected"
+            ? "Connected, but the server has not returned a startup response."
+            : "Waiting for the WebSocket connection."}
         </p>
       ) : (
         <>
@@ -41,10 +56,22 @@ export function GpioStatus() {
                 {startup.device.mock_gpio ? "Mock" : "Hardware"}
               </dd>
             </div>
+            <div className="rounded-lg border border-slate-800 bg-slate-950 p-3">
+              <dt className="text-slate-500">Allowed pins</dt>
+              <dd className="mt-1 font-medium text-slate-200">
+                {startup.pins.length}
+              </dd>
+            </div>
+            <div className="rounded-lg border border-slate-800 bg-slate-950 p-3">
+              <dt className="text-slate-500">Default PWM frequency</dt>
+              <dd className="mt-1 font-medium text-slate-200">
+                {startup.pwm.default_frequency} Hz
+              </dd>
+            </div>
           </dl>
 
           <div className="mt-6 overflow-x-auto rounded-lg border border-slate-800">
-            <table className="w-full min-w-[32rem] text-left text-sm">
+            <table className="w-full min-w-lg text-left text-sm">
               <thead className="bg-slate-950 text-slate-400">
                 <tr>
                   <th className="px-4 py-3 font-medium">Pin</th>
@@ -64,7 +91,9 @@ export function GpioStatus() {
                     <td className="px-4 py-3">
                       {pin.pwm.active ? "Active" : "Inactive"}
                     </td>
-                    <td className="px-4 py-3">{pin.pwm.duty_cycle}%</td>
+                    <td className="px-4 py-3">
+                      {(pin.pwm.duty_cycle * 100).toFixed(1)}%
+                    </td>
                     <td className="px-4 py-3">{pin.pwm.frequency} Hz</td>
                   </tr>
                 ))}
