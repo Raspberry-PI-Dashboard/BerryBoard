@@ -1,12 +1,12 @@
-import { useState } from "react";
-import type { ShellMessage } from "../ws/message";
+import { useEffect, useState } from "react";
+import type { ShellInputMessage, ShellStartMessage } from "../ws/message";
 import type {
   ErrorMessage,
   ShellResponse,
   WebSocketMessage,
 } from "../ws/protocol";
 import { useWebSocketContext } from "../context/WebSocketContext";
-import { SectionTitle } from "../layouts/Section";
+import { Section, SectionTitle } from "../layouts/Section";
 
 function isShellResponse(message: WebSocketMessage): message is ShellResponse {
   return message.type === "shell";
@@ -24,36 +24,45 @@ export function ShellWebSocket() {
   const shellMessages = messages.filter(isShellResponse);
   const shellErrors = messages.filter(isErrorMessage);
 
+  useEffect(() => {
+    if (status !== "Connected") return;
+
+    const startMessage: ShellStartMessage = { type: "shell_start" };
+    sendMessage(startMessage);
+  }, [sendMessage, status]);
+
   function runCommand() {
-    const message: ShellMessage = { type: "shell", command };
+    const message: ShellInputMessage = { type: "shell_input", data: command };
     if (command && sendMessage(message)) setCommand("");
   }
 
   return (
-    <>
+    <Section>
       <SectionTitle>Remote shell</SectionTitle>
-      
-      <form
-        className="mt-8 flex gap-3"
-        onSubmit={(event) => {
-          event.preventDefault();
-          runCommand();
-        }}
-      >
-        <input
-          className="min-w-0 flex-1 rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 font-mono text-slate-100 outline-none focus:border-cyan-400"
-          onChange={(event) => setCommand(event.target.value)}
-          placeholder="Enter a shell command"
-          value={command}
-        />
-        <button
-          className="rounded-lg bg-cyan-400 px-5 py-2 font-semibold text-slate-950 disabled:cursor-not-allowed disabled:opacity-40"
-          disabled={status !== "Connected" || !command}
-          type="submit"
+
+      <fieldset disabled={status !== "Connected"}>
+        <form
+          className="mt-8 flex gap-3"
+          onSubmit={(event) => {
+            event.preventDefault();
+            runCommand();
+          }}
         >
-          Run
-        </button>
-      </form>
+          <input
+            className="min-w-0 flex-1 rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 font-mono text-slate-100 outline-none focus:border-cyan-400 disabled:cursor-not-allowed disabled:opacity-50"
+            onChange={(event) => setCommand(event.target.value)}
+            placeholder="Enter a shell command"
+            value={command}
+          />
+          <button
+            className="rounded-lg bg-cyan-400 px-5 py-2 font-semibold text-slate-950 disabled:cursor-not-allowed disabled:opacity-40"
+            disabled={!command}
+            type="submit"
+          >
+            Run
+          </button>
+        </form>
+      </fieldset>
 
       <section
         className="mt-6 rounded-lg border border-red-900 bg-red-950/40 p-4"
@@ -85,6 +94,6 @@ export function ShellWebSocket() {
               </pre>
             ))}
       </div>
-    </>
+    </Section>
   );
 }

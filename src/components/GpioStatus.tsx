@@ -1,6 +1,6 @@
 import type { StartupResponse, WebSocketMessage } from "../ws/protocol";
 import { useWebSocketContext } from "../context/WebSocketContext";
-import { SectionTitle } from "../layouts/Section";
+import { Section, SectionTitle } from "../layouts/Section";
 
 function isStartupResponse(
   message: WebSocketMessage,
@@ -13,7 +13,7 @@ export function GpioStatus() {
   const startup = messages.find(isStartupResponse);
 
   return (
-    <>
+    <Section>
       <SectionTitle>GPIO</SectionTitle>
 
       {!startup ? (
@@ -73,6 +73,6 @@ export function GpioStatus() {
           </div>
         </>
       )}
-    </>
+    </Section>
   );
 }

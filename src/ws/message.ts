@@ -70,10 +70,16 @@ export type I2CMessage =
       data: number[];
     };
 
-export type ShellMessage = {
-  type: "shell";
-  command: string;
+export type ShellStartMessage = {
+  type: "shell_start";
 };
+
+export type ShellInputMessage = {
+  type: "shell_input";
+  data: string;
+};
+
+export type ShellMessage = ShellStartMessage | ShellInputMessage;
 
 export type WebSocketMessage =
   | StartupMessage
