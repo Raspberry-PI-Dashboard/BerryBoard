@@ -380,13 +380,18 @@ export type I2CState = {
 // =============================================================================
 
 // Exact fields depend on ClientSession / shell.execute().
-export type ShellRequest = {
-  type: "shell";
-  [key: string]: unknown;
+export type ShellRequest =
+  | {
+      type: "shell_start";
+    }
+  | {
+      type: "shell_input";
+      data: string;
+    };
+
+export type ShellOutputMessage = {
+  type: "shell_output";
+  data: string;
 };
 
-export type ShellResponse = {
-  ok: true;
-  type: "shell";
-  [key: string]: unknown;
-};
+export type ShellResponse = ShellOutputMessage;

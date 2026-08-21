@@ -2,14 +2,16 @@ import { useEffect, useState } from "react";
 import type { ShellInputMessage, ShellStartMessage } from "../ws/message";
 import type {
   ErrorMessage,
-  ShellResponse,
+  ShellOutputMessage,
   WebSocketMessage,
 } from "../ws/protocol";
 import { useWebSocketContext } from "../context/WebSocketContext";
 import { Section, SectionTitle } from "../layouts/Section";
 
-function isShellResponse(message: WebSocketMessage): message is ShellResponse {
-  return message.type === "shell";
+function isShellOutput(
+  message: WebSocketMessage,
+): message is ShellOutputMessage {
+  return message.type === "shell_output";
 }
 
 function isErrorMessage(message: WebSocketMessage): message is ErrorMessage {
@@ -21,7 +23,7 @@ export function ShellWebSocket() {
   const [command, setCommand] = useState("");
 
   const { status, messages, sendMessage } = connection;
-  const shellMessages = messages.filter(isShellResponse);
+  const shellMessages = messages.filter(isShellOutput);
   const shellErrors = messages.filter(isErrorMessage);
 
   useEffect(() => {
@@ -82,15 +84,15 @@ export function ShellWebSocket() {
         </div>
       </section>
 
-      <div className="mt-6 min-h-40 rounded-lg border border-slate-800 bg-slate-950 p-4 font-mono text-sm text-slate-300">
+      <div className="mt-6 overflow-y-auto scrollbar-none [&::-webkit-scrollbar]:hidden h-80 rounded-lg border border-slate-800 bg-slate-950 p-4 font-mono text-sm text-slate-300">
         {shellMessages.length === 0
-          ? "No shell responses received."
+          ? ""
           : shellMessages.map((message, index) => (
               <pre
                 key={`${message.type}-${index}`}
                 className="mb-3 whitespace-pre-wrap last:mb-0"
               >
-                {JSON.stringify(message, null, 2)}
+                {message.data}
               </pre>
             ))}
       </div>
