@@ -1,44 +1,23 @@
-import { useEffect, useRef, useState } from 'react'
-import type { FormEvent } from 'react'
-
-type ConnectionStatus = 'Connecting' | 'Connected' | 'Disconnected' | 'Error'
+import { useState } from 'react'
+import { getWebSocketUrlError, useWebSocket } from '../hooks/useWebSocket'
 
 type WebSocketStatusProps = {
   initialUrl: string
 }
 
+const urlCookieName = 'websocket-url'
+
+function getSavedUrl(fallback: string) {
+  const savedCookie = document.cookie
+    .split('; ')
+    .find((cookie) => cookie.startsWith(`${urlCookieName}=`))
+
+  return savedCookie ? decodeURIComponent(savedCookie.split('=')[1]) : fallback
+}
+
 export function WebSocketStatus({ initialUrl }: WebSocketStatusProps) {
-  const socketRef = useRef<WebSocket | null>(null)
-  const [url, setUrl] = useState(initialUrl)
-  const [message, setMessage] = useState('')
-  const [messages, setMessages] = useState<string[]>([])
-  const [status, setStatus] = useState<ConnectionStatus>('Connecting')
-
-  useEffect(() => {
-    const socket = new WebSocket(url)
-    socketRef.current = socket
-
-    socket.onopen = () => setStatus('Connected')
-    socket.onmessage = (event) => {
-      setMessages((current) => [...current, String(event.data)])
-    }
-    socket.onerror = () => setStatus('Error')
-    socket.onclose = () => setStatus('Disconnected')
-
-    return () => {
-      socket.close()
-      socketRef.current = null
-    }
-  }, [url])
-
-  function sendMessage(event: FormEvent<HTMLFormElement>) {
-    event.preventDefault()
-    if (!message || socketRef.current?.readyState !== WebSocket.OPEN) return
-
-    socketRef.current.send(message)
-    setMessages((current) => [...current, `You: ${message}`])
-    setMessage('')
-  }
+  const [saved, setSaved] = useState(false)
+  const { url, setUrl, status, error, messages } = useWebSocket(getSavedUrl(initialUrl))
 
   return (
     <>
@@ -61,33 +40,34 @@ export function WebSocketStatus({ initialUrl }: WebSocketStatusProps) {
         className="mt-2 w-full rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-slate-100 outline-none focus:border-cyan-400"
         id="url"
         onChange={(event) => {
-          setStatus('Connecting')
+          setSaved(false)
           setUrl(event.target.value)
         }}
         value={url}
       />
+      <button
+        className="mt-3 rounded-lg border border-cyan-400 px-4 py-2 text-sm font-semibold text-cyan-300 disabled:cursor-not-allowed disabled:opacity-40"
+        disabled={Boolean(getWebSocketUrlError(url))}
+        onClick={() => {
+          document.cookie = `${urlCookieName}=${encodeURIComponent(url)}; max-age=31536000; path=/`
+          setSaved(true)
+        }}
+        type="button"
+      >
+        {saved ? 'URL saved' : 'Save URL'}
+      </button>
+
+      {error && (
+        <div className="mt-3 rounded-lg border border-red-900 bg-red-950/50 px-3 py-2 text-sm text-red-300" role="alert">
+          {error}
+        </div>
+      )}
 
       <div className="mt-6 min-h-40 rounded-lg border border-slate-800 bg-slate-950 p-4 font-mono text-sm text-slate-300">
         {messages.length === 0
           ? 'No messages received.'
           : messages.map((item, index) => <p key={`${item}-${index}`}>{item}</p>)}
       </div>
-
-      <form className="mt-4 flex gap-3" onSubmit={sendMessage}>
-        <input
-          className="min-w-0 flex-1 rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 text-slate-100 outline-none focus:border-cyan-400"
-          onChange={(event) => setMessage(event.target.value)}
-          placeholder="Send a message"
-          value={message}
-        />
-        <button
-          className="rounded-lg bg-cyan-400 px-5 py-2 font-semibold text-slate-950 disabled:cursor-not-allowed disabled:opacity-40"
-          disabled={status !== 'Connected'}
-          type="submit"
-        >
-          Send
-        </button>
-      </form>
     </>
   )
 }
