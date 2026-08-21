@@ -6,6 +6,7 @@ import type {
   WebSocketMessage,
 } from "../ws/protocol";
 import { useWebSocketContext } from "../context/WebSocketContext";
+import { SectionTitle } from "../layouts/Section";
 
 function isShellResponse(message: WebSocketMessage): message is ShellResponse {
   return message.type === "shell";
@@ -30,6 +31,8 @@ export function ShellWebSocket() {
 
   return (
     <>
+      <SectionTitle>Remote shell</SectionTitle>
+      
       <form
         className="mt-8 flex gap-3"
         onSubmit={(event) => {
@@ -52,7 +55,10 @@ export function ShellWebSocket() {
         </button>
       </form>
 
-      <section className="mt-6 rounded-lg border border-red-900 bg-red-950/40 p-4" aria-live="polite">
+      <section
+        className="mt-6 rounded-lg border border-red-900 bg-red-950/40 p-4"
+        aria-live="polite"
+      >
         <h2 className="text-sm font-semibold uppercase tracking-[0.15em] text-red-300">
           Shell errors
         </h2>
@@ -71,7 +77,10 @@ export function ShellWebSocket() {
         {shellMessages.length === 0
           ? "No shell responses received."
           : shellMessages.map((message, index) => (
-              <pre key={`${message.type}-${index}`} className="mb-3 whitespace-pre-wrap last:mb-0">
+              <pre
+                key={`${message.type}-${index}`}
+                className="mb-3 whitespace-pre-wrap last:mb-0"
+              >
                 {JSON.stringify(message, null, 2)}
               </pre>
             ))}

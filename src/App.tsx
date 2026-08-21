@@ -1,5 +1,6 @@
 import { ShellWebSocket } from "./components/ShellWebSocket";
 import { WebSocketStatus } from "./components/WebSocketStatus";
+import { GpioStatus } from "./components/GpioStatus";
 import { WebSocketProvider } from "./context/WebSocketProvider";
 import { Section } from "./layouts/Section";
 
@@ -14,6 +15,9 @@ function App() {
         </Section>
         <Section className="mt-6">
           <ShellWebSocket />
+        </Section>
+        <Section className="mt-6">
+          <GpioStatus />
         </Section>
       </WebSocketProvider>
     </main>

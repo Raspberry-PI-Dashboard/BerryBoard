@@ -16,3 +16,19 @@ export function Section({
     </section>
   );
 }
+
+export function SectionTitle({
+  children,
+  className,
+}: PropsWithChildren & { className?: string }) {
+  return (
+    <p
+      className={clsx(
+        className,
+        "mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-cyan-400",
+      )}
+    >
+      {children}
+    </p>
+  );
+}
