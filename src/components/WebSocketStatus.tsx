@@ -1,23 +1,12 @@
 import { useState } from 'react'
-import { getWebSocketUrlError, useWebSocket } from '../hooks/useWebSocket'
-
-type WebSocketStatusProps = {
-  initialUrl: string
-}
+import { getWebSocketUrlError } from '../hooks/useWebSocket'
+import { useWebSocketContext } from '../context/WebSocketContext'
 
 const urlCookieName = 'websocket-url'
 
-function getSavedUrl(fallback: string) {
-  const savedCookie = document.cookie
-    .split('; ')
-    .find((cookie) => cookie.startsWith(`${urlCookieName}=`))
-
-  return savedCookie ? decodeURIComponent(savedCookie.split('=')[1]) : fallback
-}
-
-export function WebSocketStatus({ initialUrl }: WebSocketStatusProps) {
+export function WebSocketStatus() {
   const [saved, setSaved] = useState(false)
-  const { url, setUrl, status, error, messages } = useWebSocket(getSavedUrl(initialUrl))
+  const { url, setUrl, status, error } = useWebSocketContext()
 
   return (
     <>
@@ -62,12 +51,6 @@ export function WebSocketStatus({ initialUrl }: WebSocketStatusProps) {
           {error}
         </div>
       )}
-
-      <div className="mt-6 min-h-40 rounded-lg border border-slate-800 bg-slate-950 p-4 font-mono text-sm text-slate-300">
-        {messages.length === 0
-          ? 'No messages received.'
-          : messages.map((item, index) => <p key={`${item}-${index}`}>{item}</p>)}
-      </div>
     </>
   )
 }
