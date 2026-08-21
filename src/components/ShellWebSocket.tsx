@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import type { ShellInputMessage, ShellStartMessage } from "../ws/message";
+import { useState } from "react";
+import type { ShellMessage } from "../ws/message";
 import type {
   ErrorMessage,
   ShellOutputMessage,
@@ -11,11 +11,14 @@ import { Section, SectionTitle } from "../layouts/Section";
 function isShellOutput(
   message: WebSocketMessage,
 ): message is ShellOutputMessage {
-  return message.type === "shell_output";
+  return "type" in message && message.type === "shell_output";
 }
 
 function isErrorMessage(message: WebSocketMessage): message is ErrorMessage {
-  return message.type === "error";
+  return (
+    ("type" in message && message.type === "error") ||
+    ("ok" in message && message.ok === false)
+  );
 }
 
 export function ShellWebSocket() {
@@ -26,15 +29,8 @@ export function ShellWebSocket() {
   const shellMessages = messages.filter(isShellOutput);
   const shellErrors = messages.filter(isErrorMessage);
 
-  useEffect(() => {
-    if (status !== "Connected") return;
-
-    const startMessage: ShellStartMessage = { type: "shell_start" };
-    sendMessage(startMessage);
-  }, [sendMessage, status]);
-
   function runCommand() {
-    const message: ShellInputMessage = { type: "shell_input", data: command };
+    const message: ShellMessage = { type: "shell", command };
     if (command && sendMessage(message)) setCommand("");
   }
 
@@ -77,8 +73,11 @@ export function ShellWebSocket() {
           {shellErrors.length === 0
             ? "No shell errors."
             : shellErrors.map((error, index) => (
-                <p key={`${error.message}-${index}`} className="mb-2 last:mb-0">
-                  {error.message}
+                <p
+                  key={`${"message" in error ? error.message : error.error}-${index}`}
+                  className="mb-2 last:mb-0"
+                >
+                  {"message" in error ? error.message : error.error}
                 </p>
               ))}
         </div>

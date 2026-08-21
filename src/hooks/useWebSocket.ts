@@ -1,5 +1,4 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { ShellMessage } from "../ws/message";
 import type {
   StartupRequest,
   WebSocketMessage,
@@ -14,7 +13,7 @@ export type UseWebSocketResult = {
   status: ConnectionStatus;
   error: string;
   messages: WebSocketMessage[];
-  sendMessage: (message: WebSocketRequest | ShellMessage) => boolean;
+  sendMessage: (message: WebSocketRequest) => boolean;
 };
 
 export function getWebSocketUrlError(url: string) {
@@ -90,7 +89,7 @@ export function useWebSocket(initialUrl: string): UseWebSocketResult {
     setUrlState(nextUrl);
   }, []);
 
-  const sendMessage = useCallback((message: WebSocketRequest | ShellMessage) => {
+  const sendMessage = useCallback((message: WebSocketRequest) => {
     if (socketRef.current?.readyState !== WebSocket.OPEN) return false;
 
     socketRef.current.send(JSON.stringify(message));

@@ -9,11 +9,18 @@ import { Section, SectionTitle } from "../layouts/Section";
 function isStartupResponse(
   message: WebSocketMessage,
 ): message is StartupResponse {
-  return message.type === "startup";
+  return "type" in message && message.type === "startup";
 }
 
 function isStartupCommandError(message: WebSocketMessage): message is ErrorMessage {
-  return message.type === "error" && message.message.toLowerCase().includes("unknown command startup");
+  return (
+    ("type" in message &&
+      message.type === "error" &&
+      message.message.toLowerCase().includes("unknown command startup")) ||
+    ("ok" in message &&
+      message.ok === false &&
+      message.error.toLowerCase().includes("unknown command startup"))
+  );
 }
 
 export function GpioStatus() {

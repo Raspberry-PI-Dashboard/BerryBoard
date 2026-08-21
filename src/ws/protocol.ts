@@ -38,10 +38,15 @@ export type ServerShutdownMessage = {
   type: "server_shutdown";
 };
 
-export type ErrorMessage = {
-  type: "error";
-  message: string;
-};
+export type ErrorMessage =
+  | {
+      type: "error";
+      message: string;
+    }
+  | {
+      ok: false;
+      error: string;
+    };
 
 // =============================================================================
 // Startup
@@ -381,13 +386,10 @@ export type I2CState = {
 
 // Exact fields depend on ClientSession / shell.execute().
 export type ShellRequest =
-  | {
-      type: "shell_start";
-    }
-  | {
-      type: "shell_input";
-      data: string;
-    };
+  {
+    type: "shell";
+    command: string;
+  };
 
 export type ShellOutputMessage = {
   type: "shell_output";
