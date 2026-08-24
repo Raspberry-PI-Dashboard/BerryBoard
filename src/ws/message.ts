@@ -1,9 +1,9 @@
-export type StartupMessage = {
-  type: "startup";
-};
-
 export type PingMessage = {
   type: "ping";
+};
+
+export type InfoMessage = {
+  type: "info";
 };
 
 export type PinMessage =
@@ -71,13 +71,13 @@ export type I2CMessage =
     };
 
 export type ShellMessage = {
-  type: "shell";
-  command: string;
+  type: "shell_start";
+} | {
+  type: "shell_input";
+  data: string;
 };
 
 export type WebSocketMessage =
-  | StartupMessage
   | PingMessage
-  | PinMessage
-  | I2CMessage
+  | InfoMessage
   | ShellMessage;

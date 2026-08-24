@@ -1,7 +1,7 @@
 import { useState } from "react";
-import type { ShellMessage } from "../ws/message";
 import type {
   ErrorMessage,
+  ShellStartedMessage,
   ShellOutputMessage,
   WebSocketMessage,
 } from "../ws/protocol";
@@ -21,6 +21,12 @@ function isErrorMessage(message: WebSocketMessage): message is ErrorMessage {
   );
 }
 
+function isShellStarted(
+  message: WebSocketMessage,
+): message is ShellStartedMessage {
+  return "type" in message && message.type === "shell_started";
+}
+
 export function ShellWebSocket() {
   const connection = useWebSocketContext();
   const [command, setCommand] = useState("");
@@ -28,9 +34,10 @@ export function ShellWebSocket() {
   const { status, messages, sendMessage } = connection;
   const shellMessages = messages.filter(isShellOutput);
   const shellErrors = messages.filter(isErrorMessage);
+  const shellStarted = messages.some(isShellStarted);
 
   function runCommand() {
-    const message: ShellMessage = { type: "shell", command };
+    const message = { type: "shell_input" as const, data: command };
     if (command && sendMessage(message)) setCommand("");
   }
 
@@ -39,8 +46,17 @@ export function ShellWebSocket() {
       <SectionTitle>Remote shell</SectionTitle>
 
       <fieldset disabled={status !== "Connected"}>
+        {!shellStarted && (
+          <button
+            className="rounded-lg border border-cyan-400 px-4 py-2 text-sm font-semibold text-cyan-300 disabled:cursor-not-allowed disabled:opacity-40"
+            onClick={() => sendMessage({ type: "shell_start" })}
+            type="button"
+          >
+            Start shell
+          </button>
+        )}
         <form
-          className="mt-8 flex gap-3"
+          className="mt-4 flex gap-3"
           onSubmit={(event) => {
             event.preventDefault();
             runCommand();
@@ -54,7 +70,7 @@ export function ShellWebSocket() {
           />
           <button
             className="rounded-lg bg-cyan-400 px-5 py-2 font-semibold text-slate-950 disabled:cursor-not-allowed disabled:opacity-40"
-            disabled={!command}
+            disabled={!command || !shellStarted}
             type="submit"
           >
             Run

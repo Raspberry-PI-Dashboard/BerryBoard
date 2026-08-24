@@ -1,9 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type {
-  StartupRequest,
-  WebSocketMessage,
-  WebSocketRequest,
-} from "../ws/protocol";
+import type { WebSocketMessage, WebSocketRequest } from "../ws/protocol";
 
 type ConnectionStatus = "Connecting" | "Connected" | "Disconnected" | "Error";
 
@@ -48,8 +44,6 @@ export function useWebSocket(initialUrl: string): UseWebSocketResult {
       setStatus("Connected");
       setError("");
 
-      const startupRequest: StartupRequest = { type: "startup" };
-      socket.send(JSON.stringify(startupRequest));
     };
     socket.onmessage = (event) => {
       if (socketRef.current !== socket) return;

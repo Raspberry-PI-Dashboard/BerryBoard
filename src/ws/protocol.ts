@@ -5,23 +5,20 @@
 // =============================================================================
 
 export type WebSocketRequest =
-  | StartupRequest
   | PingRequest
-  | PinRequest
-  | I2CRequest
+  | InfoRequest
   | ShellRequest;
 
 export type WebSocketMessage =
   | WebSocketResponse
   | ConnectedMessage
+  | InfoResponse
   | ServerShutdownMessage
   | ErrorMessage;
 
 export type WebSocketResponse =
-  | StartupResponse
   | PongResponse
-  | PinResponse
-  | I2CResponse
+  | InfoResponse
   | ShellResponse;
 
 // =============================================================================
@@ -49,56 +46,7 @@ export type ErrorMessage =
     };
 
 // =============================================================================
-// Startup
-// =============================================================================
-
-export type StartupRequest = {
-  type: "startup";
-};
-
-export type StartupResponse = {
-  ok: true;
-  type: "startup";
-
-  protocol: {
-    version: number;
-  };
-
-  device: {
-    name: string;
-    platform: string;
-    release: string;
-    mock_gpio: boolean;
-  };
-
-  capabilities: string[];
-
-  pins: number[];
-
-  pwm: {
-    default_frequency: number;
-    duty_cycle_min: number;
-    duty_cycle_max: number;
-  };
-
-  i2c: {
-    bus: number;
-    mock: boolean;
-    operations: I2CAction[];
-  };
-
-  shell: {
-    commands: string[];
-  };
-
-  state: {
-    gpio: PinState[];
-    i2c: I2CState;
-  };
-};
-
-// =============================================================================
-// Ping
+// Health and connection information
 // =============================================================================
 
 export type PingRequest = {
@@ -106,8 +54,17 @@ export type PingRequest = {
 };
 
 export type PongResponse = {
-  ok: true;
   type: "pong";
+  timestamp: string;
+};
+
+export type InfoRequest = {
+  type: "info";
+};
+
+export type InfoResponse = {
+  type: "info";
+  connected_at: string;
 };
 
 // =============================================================================
@@ -384,16 +341,22 @@ export type I2CState = {
 // Shell
 // =============================================================================
 
-// Exact fields depend on ClientSession / shell.execute().
 export type ShellRequest =
-  {
-    type: "shell";
-    command: string;
-  };
+  | {
+      type: "shell_start";
+    }
+  | {
+      type: "shell_input";
+      data: string;
+    };
+
+export type ShellStartedMessage = {
+  type: "shell_started";
+};
 
 export type ShellOutputMessage = {
   type: "shell_output";
   data: string;
 };
 
-export type ShellResponse = ShellOutputMessage;
+export type ShellResponse = ShellOutputMessage | ShellStartedMessage;
