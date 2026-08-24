@@ -1,4 +1,3 @@
-import { useEffect } from "react";
 import type { PinReadResponse, WebSocketMessage } from "../ws/protocol";
 import { useWebSocketContext } from "../context/WebSocketContext";
 import { Section, SectionTitle } from "../layouts/Section";
@@ -26,13 +25,6 @@ export function GpioStatus() {
   function readPin(pin: number) {
     sendMessage({ type: "pin", action: "read", pin });
   }
-
-  useEffect(() => {
-    if (status !== "Connected") return;
-    for (const pin of allowedPins) {
-      sendMessage({ type: "pin", action: "read", pin });
-    }
-  }, [sendMessage, status]);
 
   return (
     <Section>
