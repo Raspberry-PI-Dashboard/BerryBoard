@@ -80,4 +80,5 @@ export type ShellMessage = {
 export type WebSocketMessage =
   | PingMessage
   | InfoMessage
+  | PinMessage
   | ShellMessage;

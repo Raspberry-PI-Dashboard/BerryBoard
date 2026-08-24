@@ -7,6 +7,7 @@
 export type WebSocketRequest =
   | PingRequest
   | InfoRequest
+  | PinReadRequest
   | ShellRequest;
 
 export type WebSocketMessage =
@@ -19,6 +20,7 @@ export type WebSocketMessage =
 export type WebSocketResponse =
   | PongResponse
   | InfoResponse
+  | PinReadResponse
   | ShellResponse;
 
 // =============================================================================
