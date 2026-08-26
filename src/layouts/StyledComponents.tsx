@@ -7,7 +7,7 @@ import type {
 
 type ButtonVariant = "primary" | "secondary" | "filled";
 
-const ButtonVariantsClasses: Record<ButtonVariant, string | string[]> = {
+const ButtonVariantClasses: Record<ButtonVariant, string | string[]> = {
   primary: [
     "rounded-lg border border-cyan-400",
     "font-semibold text-cyan-300",
@@ -30,11 +30,9 @@ export function Button({
   variant = "primary",
   ...props
 }: ButtonHTMLAttributes<HTMLButtonElement> & { variant?: ButtonVariant }) {
-  const styledClasses = ButtonVariantsClasses[variant];
-
   return (
     <button
-      className={clsx("px-4 py-2", styledClasses, className)}
+      className={clsx("px-4 py-2", ButtonVariantClasses[variant], className)}
       {...props}
     />
   );
@@ -88,16 +86,22 @@ export function Input({
   );
 }
 
+type BadgeVariant = "ok" | "warning" | "error";
+
 export function Badge({
   className,
+  variant = "ok",
   ...props
-}: HTMLAttributes<HTMLSpanElement>) {
+}: HTMLAttributes<HTMLSpanElement> & { variant?: BadgeVariant }) {
   return (
     <span
       className={clsx(
         "rounded-full border border-slate-700",
         "px-2 p-1",
         "text-sm text-slate-300",
+        variant === "ok" && "bg-green-800",
+        variant === "warning" && "bg-amber-500",
+        variant === "error" && "border-red-900 bg-red-950 text-red-300",
         className,
       )}
       {...props}
