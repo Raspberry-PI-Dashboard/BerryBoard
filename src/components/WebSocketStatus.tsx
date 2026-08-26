@@ -7,10 +7,17 @@ import clsx from "clsx";
 
 export function WebSocketStatus() {
   const [saved, setSaved] = useState(false);
-  const { url, setUrl, status, error } = useWebSocketContext();
+  const { url, setUrl, status, error, isConnected } = useWebSocketContext();
 
   return (
-    <Section Title="WebSocket Client" Accessory={<Badge>{status}</Badge>}>
+    <Section
+      Title="WebSocket Client"
+      Accessory={
+        <Badge variant={error ? "error" : isConnected ? "ok" : "warning"}>
+          {status}
+        </Badge>
+      }
+    >
       <div className="flex gap-1 items-end">
         <Input
           id="url"
@@ -47,10 +54,9 @@ export function WebSocketStatusMini({ isOpen }: { isOpen: boolean }) {
       className={clsx(
         "flex flex-col gap-2 items-start p-2",
         isOpen ? "w-auto opacity-100" : "w-0 opacity-0",
+        "duration-300",
       )}
     >
-      <Badge variant={isConnected ? "ok" : "error"}>{status}</Badge>
-
       <div className="flex gap-1 items-end">
         <Input
           className="max-w-40"
@@ -74,7 +80,9 @@ export function WebSocketStatusMini({ isOpen }: { isOpen: boolean }) {
         </Button>
       </div>
 
-      {error && <SectionError>{error}</SectionError>}
+      <Badge variant={error ? "error" : isConnected ? "ok" : "warning"}>
+        {status}
+      </Badge>
     </div>
   );
 }
