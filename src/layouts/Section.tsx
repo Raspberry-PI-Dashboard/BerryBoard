@@ -1,17 +1,31 @@
 import clsx from "clsx";
-import type { PropsWithChildren } from "react";
+import type { HTMLAttributes } from "react";
 
 export function Section({
   children,
   className,
-}: PropsWithChildren & { className?: string }) {
+  Title,
+  Accessory,
+}: HTMLAttributes<HTMLElement> & {
+  Title?: React.ReactNode;
+  Accessory?: React.ReactNode;
+}) {
   return (
     <section
       className={clsx(
+        "mx-auto w-full max-w-2xl",
+        "rounded-2xl border border-slate-800 bg-slate-900 shadow-2xl",
+        "p-8",
         className,
-        "mx-auto w-full max-w-2xl rounded-2xl border border-slate-800 bg-slate-900 p-8 shadow-2xl",
       )}
     >
+      {(Title || Accessory) && (
+        <div className="mb-8 flex items-center justify-between gap-4">
+          <SectionTitle>{Title}</SectionTitle>
+          <SectionAccessory>{Accessory}</SectionAccessory>
+        </div>
+      )}
+
       {children}
     </section>
   );
@@ -20,15 +34,31 @@ export function Section({
 export function SectionTitle({
   children,
   className,
-}: PropsWithChildren & { className?: string }) {
+}: HTMLAttributes<HTMLElement>) {
   return (
     <p
       className={clsx(
-        className,
         "mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-cyan-400",
+        className,
       )}
     >
       {children}
     </p>
+  );
+}
+
+export function SectionAccessory({
+  children,
+  className,
+}: HTMLAttributes<HTMLElement>) {
+  return (
+    <div
+      className={clsx(
+        "px-3 py-1",
+        className,
+      )}
+    >
+      {children}
+    </div>
   );
 }

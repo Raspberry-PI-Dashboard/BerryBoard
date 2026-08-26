@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { getWebSocketUrlError } from "../hooks/useWebSocket";
 import { useWebSocketContext } from "../context/WebSocketContext";
-import { Section, SectionTitle } from "../layouts/Section";
+import { Section } from "../layouts/Section";
+import { Badge } from "../layouts/StyledComponents";
 
 const urlCookieName = "websocket-url";
 
@@ -10,14 +11,7 @@ export function WebSocketStatus() {
   const { url, setUrl, status, error } = useWebSocketContext();
 
   return (
-    <Section>
-      <div className="mb-8 flex items-center justify-between gap-4">
-        <SectionTitle>WebSocket client</SectionTitle>
-        <span className="rounded-full border border-slate-700 px-3 py-1 text-sm text-slate-300">
-          {status}
-        </span>
-      </div>
-
+    <Section Title="WebSocket Client" Accessory={<Badge>{status}</Badge>}>
       <label className="block text-sm text-slate-400" htmlFor="url">
         WebSocket URL
       </label>

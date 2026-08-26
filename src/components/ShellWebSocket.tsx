@@ -1,80 +1,50 @@
 import { useState } from "react";
-import type {
-  ErrorMessage,
-  ShellStartedMessage,
-  ShellOutputMessage,
-  WebSocketMessage,
-} from "../ws/protocol";
-import { useWebSocketContext } from "../context/WebSocketContext";
 import { Section, SectionTitle } from "../layouts/Section";
-
-function isShellOutput(
-  message: WebSocketMessage,
-): message is ShellOutputMessage {
-  return "type" in message && message.type === "shell_output";
-}
-
-function isErrorMessage(message: WebSocketMessage): message is ErrorMessage {
-  return (
-    ("type" in message && message.type === "error") ||
-    ("ok" in message && message.ok === false)
-  );
-}
-
-function isShellStarted(
-  message: WebSocketMessage,
-): message is ShellStartedMessage {
-  return "type" in message && message.type === "shell_started";
-}
+import { Button, Input } from "../layouts/StyledComponents";
+import { useShell } from "../hooks/useShell";
 
 export function ShellWebSocket() {
-  const connection = useWebSocketContext();
+  const {
+    shellErrors,
+    shellMessages,
+    shellStarted,
+    isConnected,
+    startShell,
+    runCommand,
+  } = useShell();
   const [command, setCommand] = useState("");
 
-  const { status, messages, sendMessage } = connection;
-  const shellMessages = messages.filter(isShellOutput);
-  const shellErrors = messages.filter(isErrorMessage);
-  const shellStarted = messages.some(isShellStarted);
-
-  function runCommand() {
-    const message = { type: "shell_input" as const, data: command };
-    if (command && sendMessage(message)) setCommand("");
-  }
-
   return (
-    <Section>
-      <SectionTitle>Remote shell</SectionTitle>
-
-      <fieldset disabled={status !== "Connected"}>
-        {!shellStarted && (
-          <button
-            className="rounded-lg border border-cyan-400 px-4 py-2 text-sm font-semibold text-cyan-300 disabled:cursor-not-allowed disabled:opacity-40"
-            onClick={() => sendMessage({ type: "shell_start" })}
-            type="button"
-          >
+    <Section
+      Title="Remote shell"
+      Accessory={
+        !shellStarted && (
+          <Button onClick={startShell} type="button" disabled={!isConnected}>
             Start shell
-          </button>
-        )}
+          </Button>
+        )
+      }
+    >
+      <fieldset disabled={!isConnected}>
         <form
           className="mt-4 flex gap-3"
           onSubmit={(event) => {
             event.preventDefault();
-            runCommand();
+            runCommand(command, () => setCommand(""));
           }}
         >
-          <input
-            className="min-w-0 flex-1 rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 font-mono text-slate-100 outline-none focus:border-cyan-400 disabled:cursor-not-allowed disabled:opacity-50"
+          <Input
             onChange={(event) => setCommand(event.target.value)}
             placeholder="Enter a shell command"
             value={command}
           />
-          <button
-            className="rounded-lg bg-cyan-400 px-5 py-2 font-semibold text-slate-950 disabled:cursor-not-allowed disabled:opacity-40"
+          <Button
             disabled={!command || !shellStarted}
             type="submit"
+            variant="filled"
           >
             Run
-          </button>
+          </Button>
         </form>
       </fieldset>
 
