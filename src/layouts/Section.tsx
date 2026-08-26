@@ -92,7 +92,6 @@ export function CardPanel({
     <div
       className={clsx(
         "overflow-y-auto scrollbar-none [&::-webkit-scrollbar]:hidden",
-        // "h-80",
         "rounded-lg border border-slate-800",
         "bg-slate-950",
         "p-4",

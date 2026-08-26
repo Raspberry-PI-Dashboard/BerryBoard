@@ -1,10 +1,8 @@
 import { useState } from "react";
-import { getWebSocketUrlError } from "../hooks/useWebSocket";
+import { getWebSocketUrlError, saveUrl } from "../hooks/useWebSocket";
 import { useWebSocketContext } from "../context/WebSocketContext";
 import { Section, SectionError } from "../layouts/Section";
 import { Badge, Button, Input } from "../layouts/StyledComponents";
-
-const urlCookieName = "websocket-url";
 
 export function WebSocketStatus() {
   const [saved, setSaved] = useState(false);
@@ -24,7 +22,7 @@ export function WebSocketStatus() {
       <Button
         disabled={Boolean(getWebSocketUrlError(url))}
         onClick={() => {
-          document.cookie = `${urlCookieName}=${encodeURIComponent(url)}; max-age=31536000; path=/`;
+          saveUrl(url);
           setSaved(true);
         }}
         type="button"

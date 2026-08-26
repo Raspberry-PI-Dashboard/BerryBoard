@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { WebSocketMessage, WebSocketRequest } from "../ws/protocol";
+import { urlCookieName } from "../context/WebSocketProvider";
 
 type ConnectionStatus = "Connecting" | "Connected" | "Disconnected" | "Error";
 
@@ -23,6 +24,10 @@ export function getWebSocketUrlError(url: string) {
   }
 }
 
+export function saveUrl(url: string) {
+  document.cookie = `${urlCookieName}=${encodeURIComponent(url)}; max-age=31536000; path=/`;
+}
+
 export function useWebSocket(initialUrl: string): UseWebSocketResult {
   const socketRef = useRef<WebSocket | null>(null);
   const [url, setUrlState] = useState(initialUrl);
@@ -43,7 +48,6 @@ export function useWebSocket(initialUrl: string): UseWebSocketResult {
       if (socketRef.current !== socket) return;
       setStatus("Connected");
       setError("");
-
     };
     socket.onmessage = (event) => {
       if (socketRef.current !== socket) return;
@@ -90,12 +94,15 @@ export function useWebSocket(initialUrl: string): UseWebSocketResult {
     return true;
   }, []);
 
-  return useMemo(() => ({
-    url,
-    setUrl,
-    status,
-    error: urlError || error,
-    messages,
-    sendMessage,
-  }), [error, messages, sendMessage, setUrl, status, url, urlError]);
+  return useMemo(
+    () => ({
+      url,
+      setUrl,
+      status,
+      error: urlError || error,
+      messages,
+      sendMessage,
+    }),
+    [error, messages, sendMessage, setUrl, status, url, urlError],
+  );
 }

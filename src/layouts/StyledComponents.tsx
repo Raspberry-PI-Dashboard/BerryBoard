@@ -67,7 +67,7 @@ export function Input({
       </>
     );
   }
-  
+
   return (
     <input
       className={clsx(
@@ -93,7 +93,9 @@ export function Badge({
   return (
     <span
       className={clsx(
-        "rounded-full border p-1 border-slate-700 text-sm text-slate-300",
+        "rounded-full border border-slate-700",
+        "px-2 p-1",
+        "text-sm text-slate-300",
         className,
       )}
       {...props}

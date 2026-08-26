@@ -10,5 +10,6 @@ export function useWebSocketContext() {
       "useWebSocketContext must be used inside WebSocketProvider",
     );
   const isConnected = connection.status === "Connected";
+  
   return { ...connection, isConnected };
 }

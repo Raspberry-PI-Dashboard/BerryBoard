@@ -7,7 +7,7 @@ type WebSocketProviderProps = {
   children: ReactNode
 }
 
-const urlCookieName = 'websocket-url'
+export const urlCookieName = 'websocket-url'
 
 function getSavedUrl(fallback: string) {
   const savedCookie = document.cookie
