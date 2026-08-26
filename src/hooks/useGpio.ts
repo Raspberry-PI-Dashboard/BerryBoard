@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import type { PinReadResponse, WebSocketMessage } from "../ws/protocol";
 import { useWebSocketContext } from "../context/WebSocketContext";
 
@@ -12,6 +13,7 @@ function isPinReadResponse(
 export function useGpio() {
   const { messages, status, sendMessage } = useWebSocketContext();
   const isConnected = status === "Connected";
+  const [refreshInterval, setRefreshInterval] = useState(5);
 
   const allowedPins = [17, 18, 22, 23, 24, 25];
   const pinValues = new Map<number, PinReadResponse>();
@@ -27,6 +29,13 @@ export function useGpio() {
   function updatePinout() {
     allowedPins.forEach(readPin);
   }
+
+  useEffect(() => {
+    if (!isConnected) return;
+
+    const intervalId = window.setInterval(updatePinout, refreshInterval * 1000);
+    return () => window.clearInterval(intervalId);
+  }, [isConnected, refreshInterval, sendMessage]);
 
   function getPinStatus(pin: number) {
     const response = pinValues.get(pin);
@@ -44,5 +53,7 @@ export function useGpio() {
     updatePinout,
     getPinLabel,
     getPinStatus,
+    refreshInterval,
+    setRefreshInterval,
   };
 }

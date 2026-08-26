@@ -1,26 +1,18 @@
 import { CardPanel, Section } from "../layouts/Section";
-import { useGpio } from "../hooks/useGpio";
 import { Button } from "../layouts/StyledComponents";
+import { useGpioContext } from "../context/GpioContext";
 
 export function GpioStatus() {
   const {
     getPinLabel,
     getPinStatus,
-    updatePinout,
     readPin,
     isConnected,
     allowedPins,
-  } = useGpio();
-
+    refreshInterval,
+  } = useGpioContext();
   return (
-    <Section
-      Title="GPIO inputs"
-      Accessory={
-        <Button disabled={!isConnected} onClick={updatePinout} type="button">
-          Refresh
-        </Button>
-      }
-    >
+    <Section Title="GPIO inputs" Accessory={"update: " + refreshInterval + "s"}>
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {allowedPins.map((pin) => {
           return (
