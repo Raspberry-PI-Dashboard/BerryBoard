@@ -10,19 +10,16 @@ type ButtonVariant = "primary" | "secondary" | "filled";
 const ButtonVariantsClasses: Record<ButtonVariant, string | string[]> = {
   primary: [
     "rounded-lg border border-cyan-400",
-    "px-4 py-2",
-    "text-sm font-semibold text-cyan-300",
+    "font-semibold text-cyan-300",
     "disabled:cursor-not-allowed disabled:opacity-40",
   ],
   secondary: [
     "rounded-lg border border-slate-700",
-    "px-3 py-2",
-    "text-sm text-slate-300",
+    "text-slate-300",
     "disabled:cursor-not-allowed disabled:opacity-40",
   ],
   filled: [
     "rounded-lg bg-cyan-400",
-    "px-5 py-2",
     "font-semibold text-slate-950",
     "disabled:cursor-not-allowed disabled:opacity-40",
   ],
@@ -35,7 +32,12 @@ export function Button({
 }: ButtonHTMLAttributes<HTMLButtonElement> & { variant?: ButtonVariant }) {
   const styledClasses = ButtonVariantsClasses[variant];
 
-  return <button className={clsx(styledClasses, className)} {...props} />;
+  return (
+    <button
+      className={clsx("px-4 py-2", styledClasses, className)}
+      {...props}
+    />
+  );
 }
 
 export function Input({
@@ -46,7 +48,7 @@ export function Input({
 }: InputHTMLAttributes<HTMLInputElement> & { label?: string }) {
   if (label) {
     return (
-      <>
+      <div>
         <label className="block text-sm text-slate-400" htmlFor={id}>
           {label}
         </label>
@@ -64,7 +66,7 @@ export function Input({
           id={id}
           {...props}
         />
-      </>
+      </div>
     );
   }
 

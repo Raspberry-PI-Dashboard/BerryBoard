@@ -10,25 +10,27 @@ export function WebSocketStatus() {
 
   return (
     <Section Title="WebSocket Client" Accessory={<Badge>{status}</Badge>}>
-      <Input
-        id="url"
-        label="WebSocket URL"
-        onChange={(event) => {
-          setSaved(false);
-          setUrl(event.target.value);
-        }}
-        value={url}
-      />
-      <Button
-        disabled={Boolean(getWebSocketUrlError(url))}
-        onClick={() => {
-          saveUrl(url);
-          setSaved(true);
-        }}
-        type="button"
-      >
-        {saved ? "URL saved" : "Save URL"}
-      </Button>
+      <div className="flex gap-1 items-end">
+        <Input
+          id="url"
+          label="WebSocket URL"
+          onChange={(event) => {
+            setSaved(false);
+            setUrl(event.target.value);
+          }}
+          value={url}
+        />
+        <Button
+          disabled={Boolean(getWebSocketUrlError(url))}
+          onClick={() => {
+            saveUrl(url);
+            setSaved(true);
+          }}
+          type="button"
+        >
+          {saved ? "URL saved" : "Save URL"}
+        </Button>
+      </div>
 
       {error && <SectionError>{error}</SectionError>}
     </Section>
