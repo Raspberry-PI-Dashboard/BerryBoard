@@ -28,9 +28,13 @@ export function useGpio() {
     allowedPins.forEach(readPin);
   }
 
-  function getPinLabel(pin: number) {
+  function getPinStatus(pin: number) {
     const response = pinValues.get(pin);
     return response ? (response.value ? "High" : "Low") : "No reading";
+  }
+
+  function getPinLabel(pin: number) {
+    return "GPIO " + pin;
   }
 
   return {
@@ -39,5 +43,6 @@ export function useGpio() {
     readPin,
     updatePinout,
     getPinLabel,
+    getPinStatus,
   };
 }

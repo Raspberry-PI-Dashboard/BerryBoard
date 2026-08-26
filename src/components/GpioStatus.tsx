@@ -1,10 +1,16 @@
-import { Section } from "../layouts/Section";
+import { CardPanel, Section } from "../layouts/Section";
 import { useGpio } from "../hooks/useGpio";
 import { Button } from "../layouts/StyledComponents";
 
 export function GpioStatus() {
-  const { getPinLabel, updatePinout, readPin, isConnected, allowedPins } =
-    useGpio();
+  const {
+    getPinLabel,
+    getPinStatus,
+    updatePinout,
+    readPin,
+    isConnected,
+    allowedPins,
+  } = useGpio();
 
   return (
     <Section
@@ -18,17 +24,14 @@ export function GpioStatus() {
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {allowedPins.map((pin) => {
           return (
-            <div
-              className="flex items-center justify-between rounded-lg border border-slate-800 bg-slate-950 p-4"
-              key={pin}
-            >
+            <CardPanel className="flex items-center justify-between" key={pin}>
               <div>
-                <div className="font-mono text-lg text-slate-100">
-                  GPIO {pin}
-                </div>
-                <div className="mt-1 text-sm text-slate-400">
+                <p className="font-mono text-lg text-slate-100">
                   {getPinLabel(pin)}
-                </div>
+                </p>
+                <p className="mt-1 text-sm text-slate-400">
+                  {getPinStatus(pin)}
+                </p>
               </div>
               <Button
                 aria-label={`Read GPIO ${pin}`}
@@ -39,7 +42,7 @@ export function GpioStatus() {
               >
                 Read
               </Button>
-            </div>
+            </CardPanel>
           );
         })}
       </div>

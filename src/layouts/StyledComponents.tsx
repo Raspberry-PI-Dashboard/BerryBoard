@@ -40,8 +40,34 @@ export function Button({
 
 export function Input({
   className,
+  label,
+  id,
   ...props
-}: InputHTMLAttributes<HTMLInputElement>) {
+}: InputHTMLAttributes<HTMLInputElement> & { label?: string }) {
+  if (label) {
+    return (
+      <>
+        <label className="block text-sm text-slate-400" htmlFor={id}>
+          {label}
+        </label>
+        <input
+          className={clsx(
+            "min-w-0 flex-1",
+            "rounded-lg border border-slate-700 outline-none",
+            "bg-slate-950",
+            "px-3 py-2",
+            "font-mono text-slate-100",
+            "focus:border-cyan-400",
+            "disabled:cursor-not-allowed disabled:opacity-50",
+            className,
+          )}
+          id={id}
+          {...props}
+        />
+      </>
+    );
+  }
+  
   return (
     <input
       className={clsx(
@@ -54,6 +80,7 @@ export function Input({
         "disabled:cursor-not-allowed disabled:opacity-50",
         className,
       )}
+      id={id}
       {...props}
     />
   );
