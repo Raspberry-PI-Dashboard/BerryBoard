@@ -50,7 +50,7 @@ export function Sidebar({ activePage, onNavigate }: SidebarProps) {
             sidebarOpen ? "w-auto opacity-100" : "w-0 opacity-0",
           )}
         >
-          DeviceScript
+          BerryBoard
         </span>
       </div>
 

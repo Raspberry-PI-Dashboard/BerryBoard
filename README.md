@@ -1,7 +1,8 @@
-# WebSocket Monitor
+# BerryBoard
 
-A minimal React and TypeScript client for connecting to a specific WebSocket endpoint and displaying received messages and connection errors.
-It will be used to connect to Raspberry PI ws server [WebBerry](https://github.com/Raspberry-PI-Dashboard/WebBerry)
+A React and TypeScript dashboard for monitoring Raspberry Pi GPIO inputs and
+running commands through a WebSocket server. It is intended to connect to the
+[WebBerry](https://github.com/Raspberry-PI-Dashboard/WebBerry) server.
 
 ## Requirements
 
@@ -17,17 +18,15 @@ Install dependencies:
 npm install
 ```
 
-Create a local environment file from the example:
-
-```bash
-cp .env.example .env
-```
-
-Set the endpoint in `.env`:
+The WebSocket endpoint is optional. To configure one, create a `.env` file in
+the project root:
 
 ```env
 VITE_WEBSOCKET_URL=wss://example.com/socket
 ```
+
+When `VITE_WEBSOCKET_URL` is not set, the client uses
+`ws://localhost:8080`. The endpoint can also be changed from **Settings**.
 
 Start the development server:
 
@@ -39,15 +38,37 @@ Open the local URL printed by Vite in your browser.
 
 ## Using the Client
 
-The client connects automatically when the page loads. It displays:
+The client connects automatically when the page loads. The sidebar provides two
+views:
 
-- Current connection status
-- Received WebSocket messages
-- Invalid URL, connection, and abnormal close errors
+- **Monitor**: shows the latest state for GPIO pins `17`, `18`, `22`, `23`, `24`
+  and `25`, and lets you request an individual reading. Readings are refreshed
+  automatically using the configured interval, which defaults to 5 seconds.
+- **Settings**: shows the WebSocket connection status and lets you change the
+  refresh interval or endpoint.
 
-You can edit the endpoint in the URL field and reconnect to the new value. Select **Save URL** to store it in a browser cookie for one year. The saved endpoint is restored on the next page load.
+The monitor also includes a remote shell. Select **Start shell**, enter a
+command, and select **Run** when the connection is ready. Shell output and
+server errors are displayed in the dashboard.
 
-This client intentionally receives messages only; it does not send data to the WebSocket server.
+Changing the endpoint reconnects the client. Select **Save URL** to store a
+valid endpoint in a browser cookie for one year; it is restored on the next
+page load. The client validates that URLs use `ws://` or `wss://`.
+
+## WebSocket Protocol
+
+Messages are JSON objects, one per WebSocket frame. The frontend currently
+uses these requests:
+
+```json
+{"type":"pin","action":"read","pin":17}
+{"type":"shell_start"}
+{"type":"shell_input","data":"uname -a"}
+```
+
+It handles connection and error messages, GPIO read responses, and shell
+startup/output responses. The TypeScript request and response definitions are
+in `src/ws/protocol.ts`; the server must implement the corresponding protocol.
 
 ## Commands
 
@@ -62,11 +83,13 @@ This client intentionally receives messages only; it does not send data to the W
 
 ```text
 src/
-├── components/
-│   └── WebSocketStatus.tsx  # Connection status and message display
-├── hooks/
-│   └── useWebSocket.ts      # WebSocket lifecycle and received messages
-├── App.tsx                  # Application layout
+├── components/              # Sidebar, GPIO, shell, and status UI
+├── context/                 # WebSocket and GPIO providers
+├── hooks/                   # WebSocket, GPIO, and shell behavior
+├── layouts/                 # Shared sections and form components
+├── ws/                      # WebSocket protocol types
+├── App.tsx                  # Application layout and view navigation
+├── index.css                # Global styles and Tailwind entry point
 └── main.tsx                 # React entry point
 ```
 
@@ -77,3 +100,14 @@ src/
 - Vite
 - Tailwind CSS 4
 - Oxlint
+
+## Production
+
+Build the application with:
+
+```bash
+npm run build
+```
+
+The generated files are written to `dist/`. They can be served by any static
+web server. Use `npm run preview` to inspect the production build locally.
