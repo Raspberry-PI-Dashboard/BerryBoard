@@ -14,6 +14,9 @@ export function useGpio() {
   const { messages, status, sendMessage } = useWebSocketContext();
   const isConnected = status === "Connected";
   const [refreshInterval, setRefreshInterval] = useState(5);
+  const [monitoredPins, setMonitoredPins] = useState(
+    new Map<number, boolean>(),
+  );
 
   const allowedPins = [17, 18, 22, 23, 24, 25];
   const pinValues = new Map<number, PinReadResponse>();
@@ -26,17 +29,28 @@ export function useGpio() {
     sendMessage({ type: "pin", action: "read", pin });
   }
 
-  function updatePinout() {
-    allowedPins.forEach(readPin);
+  function updateMonitoredPins() {
+    const availablePins: number[] = [];
+    monitoredPins.forEach((value, pin) => {
+      if (value) {
+        availablePins.push(pin);
+      }
+    });
+    availablePins.forEach(readPin);
   }
 
+  // POLLING
   useEffect(() => {
     if (!isConnected) return;
 
-    const intervalId = window.setInterval(updatePinout, refreshInterval * 1000);
+    const intervalId = window.setInterval(
+      updateMonitoredPins,
+      refreshInterval * 1000,
+    );
     return () => window.clearInterval(intervalId);
   }, [isConnected, refreshInterval, sendMessage]);
 
+  // UI
   function getPinStatus(pin: number) {
     const response = pinValues.get(pin);
     return response ? (response.value ? "High" : "Low") : "No reading";
@@ -49,8 +63,9 @@ export function useGpio() {
   return {
     isConnected,
     allowedPins,
+    monitoredPins,
+    setMonitoredPins,
     readPin,
-    updatePinout,
     getPinLabel,
     getPinStatus,
     refreshInterval,
