@@ -1,6 +1,6 @@
 import { Section } from "../layouts/Section";
 import { Input } from "../layouts/StyledComponents";
-import { useGpioContext } from "../context/GpioContext";
+import { useGpioUI } from "./useGpioUI";
 
 export function GpioSettings() {
   const {
@@ -9,7 +9,7 @@ export function GpioSettings() {
     allowedPins,
     monitoredPins,
     setMonitoredPins,
-  } = useGpioContext();
+  } = useGpioUI();
 
   function updateMonitoredPins(
     e: React.ChangeEvent<HTMLInputElement, HTMLInputElement>,
@@ -47,6 +47,31 @@ export function GpioSettings() {
             </div>
           );
         })}
+      </div>
+
+      <span>Pins settings</span>
+      <div className="flex gap-4">
+        {allowedPins.map((pin) => {
+          return <GpioActions pin={pin} />;
+        })}
+      </div>
+    </Section>
+  );
+}
+
+export function GpioActions({ pin }: { pin: number }) {
+  const { setPin, setPinPWM, togglePin, stopPinPWM } = useGpioUI();
+
+  return (
+    <Section Title={"GPIO " + pin + " Actions"}>
+      <div className="flex gap-4">
+        <button onClick={() => setPin(pin, true)}>Set High</button>
+        <button onClick={() => setPin(pin, false)}>Set Low</button>
+        <button onClick={() => togglePin(pin)}>Toggle</button>
+        <button onClick={() => setPinPWM(pin, 50)}>Set PWM 50%</button>
+        <button onClick={() => setPinPWM(pin, 75)}>Set PWM 75%</button>
+        <button onClick={() => setPinPWM(pin, 100)}>Set PWM 100%</button>
+        <button onClick={() => stopPinPWM(pin)}>Stop PWM</button>
       </div>
     </Section>
   );

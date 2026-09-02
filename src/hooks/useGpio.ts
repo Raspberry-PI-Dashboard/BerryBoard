@@ -63,6 +63,10 @@ export function useGpio() {
     sendMessage({ type: "pin", action: "pwm_set", pin, duty_cycle, frequency });
   }
 
+  function stopPinPWM(pin: number) {
+    sendMessage({ type: "pin", action: "pwm_stop", pin });
+  }
+
   function togglePin(pin: number) {
     sendMessage({ type: "pin", action: "toggle", pin });
   }
@@ -92,8 +96,9 @@ export function useGpio() {
 
     readPin,
     setPin,
-    setPinPWM,
     togglePin,
+    setPinPWM,
+    stopPinPWM,
     refreshInterval,
     setRefreshInterval,
   };
