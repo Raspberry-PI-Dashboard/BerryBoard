@@ -14,6 +14,7 @@ export function useGpio() {
   const { messages, status, sendMessage } = useWebSocketContext();
   const isConnected = status === "Connected";
   const [refreshInterval, setRefreshInterval] = useState(5);
+
   const [monitoredPins, setMonitoredPins] = useState(
     new Map<number, boolean>(),
   );
@@ -50,24 +51,14 @@ export function useGpio() {
     return () => window.clearInterval(intervalId);
   }, [isConnected, refreshInterval, sendMessage]);
 
-  // UI
-  function getPinStatus(pin: number) {
-    const response = pinValues.get(pin);
-    return response ? (response.value ? "High" : "Low") : "No reading";
-  }
-
-  function getPinLabel(pin: number) {
-    return "GPIO " + pin;
-  }
-
   return {
+    pinValues,
+
     isConnected,
     allowedPins,
     monitoredPins,
     setMonitoredPins,
     readPin,
-    getPinLabel,
-    getPinStatus,
     refreshInterval,
     setRefreshInterval,
   };
