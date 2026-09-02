@@ -1,7 +1,7 @@
 import { ShellWebSocket } from "./components/ShellWebSocket";
 import { WebSocketStatus } from "./components/WebSocketStatus";
-import { GpioMonitor } from "./components/GpioMonitor";
-import { GpioSettings } from "./components/GpioSettings";
+import { GpioMonitor } from "./gpio/GpioMonitor";
+import { GpioSettings } from "./gpio/GpioSettings";
 import { WebSocketProvider } from "./context/WebSocketProvider";
 import { GpioProvider } from "./context/GpioProvider";
 import { Sidebar } from "./components/Sidebar";
