@@ -8,6 +8,11 @@ export type WebSocketRequest =
   | PingRequest
   | InfoRequest
   | PinReadRequest
+  | PinSetRequest
+  | PinToggleRequest
+  | PinPwmSetRequest
+  | PinPwmStopRequest
+  | I2CRequest
   | ShellRequest;
 
 export type WebSocketMessage =
@@ -21,6 +26,10 @@ export type WebSocketResponse =
   | PongResponse
   | InfoResponse
   | PinReadResponse
+  | PinSetResponse
+  | PinToggleResponse
+  | PinPwmResponse
+  | I2CResponse
   | ShellResponse;
 
 // =============================================================================

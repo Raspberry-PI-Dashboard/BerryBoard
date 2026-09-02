@@ -10,10 +10,74 @@ function isPinReadResponse(
   );
 }
 
+function useGpioPolling(readPin: (pin: number) => void, isConnected: boolean) {
+  const [refreshInterval, setRefreshInterval] = useState(5);
+  const [monitoredPins, setMonitoredPins] = useState(
+    new Map<number, boolean>(),
+  );
+
+  function updateMonitoredPins() {
+    const availablePins: number[] = [];
+    monitoredPins.forEach((value, pin) => {
+      if (value) {
+        availablePins.push(pin);
+      }
+    });
+    availablePins.forEach(readPin);
+  }
+
+  // POLLING
+  useEffect(() => {
+    if (!isConnected) return;
+
+    const intervalId = window.setInterval(
+      updateMonitoredPins,
+      refreshInterval * 1000,
+    );
+    return () => window.clearInterval(intervalId);
+  }, [isConnected, refreshInterval]);
+
+  return {
+    monitoredPins,
+    setMonitoredPins,
+    refreshInterval,
+    setRefreshInterval,
+  };
+}
+
 export function useGpio() {
   const { messages, status, sendMessage } = useWebSocketContext();
+
+  // WS
   const isConnected = status === "Connected";
-  const [refreshInterval, setRefreshInterval] = useState(5);
+
+  function readPin(pin: number) {
+    sendMessage({ type: "pin", action: "read", pin });
+  }
+
+  function setPin(pin: number, value: boolean) {
+    sendMessage({ type: "pin", action: "set", pin, value });
+  }
+
+  function setPinPWM(pin: number, duty_cycle: number, frequency?: number) {
+    sendMessage({ type: "pin", action: "pwm_set", pin, duty_cycle, frequency });
+  }
+
+  function stopPinPWM(pin: number) {
+    sendMessage({ type: "pin", action: "pwm_stop", pin });
+  }
+
+  function togglePin(pin: number) {
+    sendMessage({ type: "pin", action: "toggle", pin });
+  }
+  //
+
+  const {
+    monitoredPins,
+    setMonitoredPins,
+    refreshInterval,
+    setRefreshInterval,
+  } = useGpioPolling(readPin, isConnected);
 
   const allowedPins = [17, 18, 22, 23, 24, 25];
   const pinValues = new Map<number, PinReadResponse>();
@@ -22,37 +86,19 @@ export function useGpio() {
     if (isPinReadResponse(message)) pinValues.set(message.pin, message);
   }
 
-  function readPin(pin: number) {
-    sendMessage({ type: "pin", action: "read", pin });
-  }
-
-  function updatePinout() {
-    allowedPins.forEach(readPin);
-  }
-
-  useEffect(() => {
-    if (!isConnected) return;
-
-    const intervalId = window.setInterval(updatePinout, refreshInterval * 1000);
-    return () => window.clearInterval(intervalId);
-  }, [isConnected, refreshInterval, sendMessage]);
-
-  function getPinStatus(pin: number) {
-    const response = pinValues.get(pin);
-    return response ? (response.value ? "High" : "Low") : "No reading";
-  }
-
-  function getPinLabel(pin: number) {
-    return "GPIO " + pin;
-  }
-
   return {
     isConnected,
+
+    pinValues,
     allowedPins,
+    monitoredPins,
+    setMonitoredPins,
+
     readPin,
-    updatePinout,
-    getPinLabel,
-    getPinStatus,
+    setPin,
+    togglePin,
+    setPinPWM,
+    stopPinPWM,
     refreshInterval,
     setRefreshInterval,
   };
