@@ -104,3 +104,29 @@ export function CardPanel({
     </div>
   );
 }
+
+export function Subsection({
+  className,
+  children,
+  subtitle,
+  ...props
+}: HTMLAttributes<HTMLElement> & { subtitle?: ReactNode }) {
+  return (
+    <div
+      className={clsx(
+        "rounded-lg border border-slate-800 bg-slate-950 p-4",
+        className,
+      )}
+      {...props}
+    >
+      {subtitle && (
+        <div className="mb-4">
+          <span className="text-sm font-semibold text-cyan-400">
+            {subtitle}
+          </span>
+        </div>
+      )}
+      {children}
+    </div>
+  );
+}
