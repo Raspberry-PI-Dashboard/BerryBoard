@@ -75,6 +75,24 @@ export type InfoResponse = {
 
 export type PinAction = "set" | "toggle" | "read" | "pwm_set" | "pwm_stop";
 
+export type PinMode = "input" | "output" | "pwm";
+
+export type PinModeRequest = {
+  type: "pin";
+  action: "mode";
+  pin: number;
+  mode: PinMode;
+};
+
+export type PinModeResponse = {
+  ok: true;
+  type: "pin";
+  action: "mode";
+  pin: number;
+  mode: PinMode;
+};
+
+
 export type PinSetRequest = {
   type: "pin";
   action: "set";
@@ -109,6 +127,7 @@ export type PinPwmStopRequest = {
 };
 
 export type PinRequest =
+  | PinModeRequest,
   | PinSetRequest
   | PinToggleRequest
   | PinReadRequest
@@ -149,6 +168,7 @@ export type PinPwmResponse = {
 };
 
 export type PinResponse =
+  | PinModeResponse
   | PinSetResponse
   | PinToggleResponse
   | PinReadResponse
