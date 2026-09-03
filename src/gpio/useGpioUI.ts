@@ -1,7 +1,7 @@
-import { useGpio } from "../hooks/useGpio";
+import { useGpioContext } from "../context/GpioContext";
 
 export function useGpioUI() {
-  const { pinValues, ...gpio } = useGpio();
+  const { pinValues, ...gpio } = useGpioContext();
 
   // UI
   function getPinStatus(pin: number): string {

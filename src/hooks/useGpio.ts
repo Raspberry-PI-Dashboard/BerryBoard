@@ -117,7 +117,10 @@ export function useGpio() {
   const pinValues = new Map<number, PinReadResponse>();
 
   for (const message of messages) {
-    if (isPinReadResponse(message)) pinValues.set(message.pin, message);
+    if (isPinReadResponse(message)) {
+      console.log('Received pin read response:', message);
+      pinValues.set(message.pin, message);
+    }
   }
 
   return {
