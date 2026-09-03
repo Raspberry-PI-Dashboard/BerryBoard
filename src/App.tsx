@@ -30,7 +30,7 @@ function AppContent({
 }) {
   return (
     <div className="flex min-h-screen bg-slate-950 text-slate-100">
-      <header>
+      <header className="shrink-0">
         <Sidebar activePage={activePage} onNavigate={onNavigate} />
       </header>
       <main className="min-h-screen flex flex-col gap-6 px-6 py-12">

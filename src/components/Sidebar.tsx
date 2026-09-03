@@ -15,11 +15,10 @@ export function Sidebar({ activePage, onNavigate }: SidebarProps) {
   return (
     <aside
       className={clsx(
-        "fixed inset-y-0 left-0 z-20",
+        "sticky top-0 z-20 h-screen shrink-0",
         "flex flex-col",
-        "transition-all duration-300 md:relative",
+        "transition-all duration-300",
         sidebarOpen ? "w-64" : "w-16",
-        "h-full",
         "border border-slate-800",
         "bg-slate-950",
       )}
