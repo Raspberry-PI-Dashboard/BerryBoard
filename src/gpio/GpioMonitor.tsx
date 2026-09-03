@@ -12,7 +12,7 @@ export function GpioMonitor() {
     >
       <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
         {allowedPins.map((pin) => {
-          return <GpioStatus pin={pin} />;
+          return <GpioStatus key={pin} pin={pin} />;
         })}
       </div>
     </Section>

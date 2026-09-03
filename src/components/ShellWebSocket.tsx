@@ -50,7 +50,7 @@ export function ShellWebSocket() {
       </fieldset>
 
       {shellErrors.length > 0 && (
-        <SectionError title="Shell Errors">
+        <SectionError className="max-h-48 overflow-y-auto" title="Shell Errors">
           {shellErrors.map((error, index) => (
             <p
               key={`${"message" in error ? error.message : error.error}-${index}`}
