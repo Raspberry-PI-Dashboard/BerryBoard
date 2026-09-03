@@ -2,6 +2,32 @@ import { useEffect, useState } from "react";
 import type { PinReadResponse, WebSocketMessage } from "../ws/protocol";
 import { useWebSocketContext } from "../context/WebSocketContext";
 
+const monitoredPinsCookieName = "monitored-pins";
+
+function getSavedMonitoredPins() {
+  const savedCookie = document.cookie
+    .split("; ")
+    .find((cookie) => cookie.startsWith(`${monitoredPinsCookieName}=`));
+
+  if (!savedCookie) return new Map<number, boolean>();
+
+  try {
+    const pins = JSON.parse(
+      decodeURIComponent(savedCookie.split("=")[1]),
+    ) as unknown;
+
+    if (!Array.isArray(pins)) return new Map<number, boolean>();
+
+    return new Map(
+      pins
+        .filter((pin): pin is number => Number.isInteger(pin))
+        .map((pin) => [pin, true]),
+    );
+  } catch {
+    return new Map<number, boolean>();
+  }
+}
+
 function isPinReadResponse(
   message: WebSocketMessage,
 ): message is PinReadResponse {
@@ -12,9 +38,17 @@ function isPinReadResponse(
 
 function useGpioPolling(readPin: (pin: number) => void, isConnected: boolean) {
   const [refreshInterval, setRefreshInterval] = useState(5);
-  const [monitoredPins, setMonitoredPins] = useState(
-    new Map<number, boolean>(),
+  const [monitoredPins, setMonitoredPinsState] = useState(
+    getSavedMonitoredPins,
   );
+
+  function setMonitoredPins(nextPins: Map<number, boolean>) {
+    const pins = new Map(nextPins);
+    setMonitoredPinsState(pins);
+    document.cookie = `${monitoredPinsCookieName}=${encodeURIComponent(
+      JSON.stringify([...pins].filter(([, monitored]) => monitored).map(([pin]) => pin)),
+    )}; max-age=31536000; path=/`;
+  }
 
   function updateMonitoredPins() {
     const availablePins: number[] = [];

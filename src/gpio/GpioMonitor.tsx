@@ -1,9 +1,9 @@
 import { Section } from "../layouts/Section";
-import { useGpioContext } from "../context/GpioContext";
 import { GpioStatus } from "./GpioStatus";
+import { useGpio } from "../hooks/useGpio";
 
 export function GpioMonitor() {
-  const { allowedPins, refreshInterval } = useGpioContext();
+  const { allowedPins, refreshInterval } = useGpio();
 
   return (
     <Section

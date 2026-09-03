@@ -40,9 +40,10 @@ export function GpioSettings() {
         <div className="flex gap-4">
           {allowedPins.map((pin) => {
             return (
-              <div>
+              <div key={pin}>
                 <span> {pin} </span>
                 <Input
+                  checked={monitoredPins.get(pin) ?? false}
                   type="checkbox"
                   onChange={(e) => updateMonitoredPins(e, pin)}
                 />
@@ -55,7 +56,7 @@ export function GpioSettings() {
       <Subsection subtitle="Pins settings">
         <div className="grid grid-col-1 gap-4">
           {allowedPins.map((pin) => {
-            return <GpioActions pin={pin} />;
+            return <GpioActions key={pin} pin={pin} />;
           })}
         </div>
       </Subsection>

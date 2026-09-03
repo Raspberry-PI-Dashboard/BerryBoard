@@ -136,7 +136,7 @@ export type PinPwmStopRequest = {
 };
 
 export type PinRequest =
-  | PinModeRequest,
+  | PinModeRequest
   | PinSetRequest
   | PinToggleRequest
   | PinReadRequest
