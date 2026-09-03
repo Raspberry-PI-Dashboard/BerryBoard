@@ -6,7 +6,16 @@ export type InfoMessage = {
   type: "info";
 };
 
+export type PinMode = "input" | "output" | "pwm";
+export type PinModeMessage = {
+  type: "pin";
+  action: "mode";
+  pin: number;
+  mode: PinMode;
+};
+
 export type PinMessage =
+  | PinModeMessage 
   | {
       type: "pin";
       action: "set";
@@ -24,7 +33,15 @@ export type PinMessage =
       pin: number;
       duty_cycle: number;
       frequency?: number;
+    }
+  | {
+      type: "pin";
+      action: "pwm_set";
+      pin: number;
+      duty_cycle: number;
+      frequency?: number;
     };
+
 
 export type I2CMessage =
   | {
