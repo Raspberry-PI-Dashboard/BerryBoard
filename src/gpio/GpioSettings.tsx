@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import type { PinMode } from "../ws/protocol";
 import { CardPanel, Section, Subsection } from "../layouts/Section";
-import { Button, Input, Select } from "../layouts/StyledComponents";
+import { Button, Checkbox, Input, Select } from "../layouts/StyledComponents";
 import { useGpioUI } from "./useGpioUI";
 
 export function GpioSettings() {
@@ -49,13 +49,13 @@ export function GpioSettings() {
       </Subsection>
 
       <Subsection subtitle="Select which pins to monitor">
-        <div className="flex gap-4">
+        <div className="grid grid-cols-[repeat(auto-fit,minmax(6rem,1fr))] gap-3">
           {allowedPins.map((pin) => {
             return (
-              <div key={pin}>
-                <span> {pin} </span>
-                <Input
+              <div className="flex min-w-0" key={pin}>
+                <Checkbox
                   checked={monitoredPins.get(pin) ?? false}
+                  label={`GPIO ${pin}`}
                   type="checkbox"
                   onChange={(e) => updateMonitoredPins(e, pin)}
                 />
@@ -97,15 +97,12 @@ export function GpioSettings() {
               {supportsPwm && <option value="pwm">PWM</option>}
           </Select>
 
-          <label className="flex items-center gap-2 self-end pb-2 text-sm text-slate-400" htmlFor="selected-pin-monitor">
-            <Input
-              checked={monitoredPins.get(selectedPin) ?? false}
-              id="selected-pin-monitor"
-              onChange={(event) => updateMonitoredPins(event, selectedPin)}
-              type="checkbox"
-            />
-            Monitor pin
-          </label>
+          <Checkbox
+            checked={monitoredPins.get(selectedPin) ?? false}
+            id="selected-pin-monitor"
+            label="Monitor"
+            onChange={(event) => updateMonitoredPins(event, selectedPin)}
+          />
 
           <Button
             onClick={() => setPinMode(selectedPin, selectedMode)}

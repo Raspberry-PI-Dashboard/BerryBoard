@@ -158,6 +158,38 @@ export function Select({
   );
 }
 
+export function Checkbox({
+  className,
+  label,
+  id,
+  ...props
+}: InputHTMLAttributes<HTMLInputElement> & { label?: string }) {
+  const checkbox = (
+    <input
+      className={clsx(
+        "h-4 w-4 accent-cyan-400",
+        "disabled:cursor-not-allowed disabled:opacity-50",
+        className,
+      )}
+      id={id}
+      type="checkbox"
+      {...props}
+    />
+  );
+
+  return label ? (
+    <label
+      className="flex items-center gap-2 self-end pb-2 text-sm text-slate-400"
+      htmlFor={id}
+    >
+      {checkbox}
+      {label}
+    </label>
+  ) : (
+    checkbox
+  );
+}
+
 type BadgeVariant = "ok" | "warning" | "error";
 
 export function Badge({
