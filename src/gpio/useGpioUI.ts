@@ -20,8 +20,16 @@ export function useGpioUI() {
     return "GPIO " + pin;
   }
 
+  function getPinModeValue(pin: number) {
+    return gpio.pinModes.get(pin);
+  }
+
+  function getPinValue(pin: number) {
+    return pinValues.get(pin)?.value;
+  }
+
   function getPinMode(pin: number): string {
-    const mode = gpio.pinModes.get(pin);
+    const mode = getPinModeValue(pin);
     return mode ? mode[0].toUpperCase() + mode.slice(1) : "Unknown";
   }
 
@@ -29,7 +37,9 @@ export function useGpioUI() {
   return {
     ...gpio,
     getPinLabel,
+    getPinModeValue,
     getPinStatus,
+    getPinValue,
     getPinMode,
   };
 }

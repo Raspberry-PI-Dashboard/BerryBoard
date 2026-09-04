@@ -1,18 +1,21 @@
 import { useState } from "react";
 import { GpioMonitor } from "../gpio/GpioMonitor";
+import { GpioWidget } from "../gpio/GpioWidget";
 import { ShellWebSocket } from "./ShellWebSocket";
 import { useWidgetLayout } from "../hooks/useWidgetLayout";
 import { useWidgetVisibility } from "../hooks/useWidgetVisibility";
 
-const defaultWidgetOrder = ["gpio", "shell"] as const;
+const defaultWidgetOrder = ["pinout", "gpio", "shell"] as const;
 type WidgetId = (typeof defaultWidgetOrder)[number];
 
 const widgets: Record<WidgetId, React.ReactNode> = {
-  gpio: <GpioMonitor />,
+  pinout: <GpioMonitor />,
+  gpio: <GpioWidget />,
   shell: <ShellWebSocket />,
 };
 
 const widgetLabels: Record<WidgetId, string> = {
+  pinout: "GPIO pinout",
   gpio: "GPIO monitoring",
   shell: "Remote shell",
 };

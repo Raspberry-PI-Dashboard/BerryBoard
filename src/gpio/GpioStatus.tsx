@@ -26,6 +26,7 @@ export function GpioStatus({ pin }: { pin: number }) {
           {getPinStatus(pin)}
         </span>
       </div>
+
     </CardPanel>
   );
 }

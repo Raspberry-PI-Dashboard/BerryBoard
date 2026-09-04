@@ -1,6 +1,7 @@
 import { useCookie } from "./useCookie";
 
 export const dashboardWidgets = [
+  { id: "pinout", label: "GPIO pinout" },
   { id: "gpio", label: "GPIO monitoring" },
   { id: "shell", label: "Remote shell" },
 ] as const;
@@ -8,6 +9,7 @@ export const dashboardWidgets = [
 export type WidgetId = (typeof dashboardWidgets)[number]["id"];
 
 const defaultVisibility: Record<WidgetId, boolean> = {
+  pinout: true,
   gpio: true,
   shell: true,
 };
