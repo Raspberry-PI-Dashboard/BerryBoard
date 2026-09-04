@@ -177,7 +177,8 @@ export type PinReadResponse = {
   type: "pin";
   action: "read";
   pin: number;
-  value: boolean;
+  mode: PinMode;
+  value: boolean | number;
 };
 
 export type PinPwmResponse = {

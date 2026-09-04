@@ -9,6 +9,12 @@ import type {
 import { useWebSocketContext } from "../context/WebSocketContext";
 import { useCookie } from "./useCookie";
 
+type PinPwmValue = {
+  duty_cycle: number;
+  frequency?: number;
+  active: boolean;
+};
+
 function isPinReadResponse(
   message: WebSocketMessage,
 ): message is PinReadResponse {
@@ -125,14 +131,27 @@ export function useGpio() {
   const pwmPins = [18];
   const pinValues = new Map<number, PinReadResponse>();
   const pinModes = new Map<number, PinMode>();
-  const pwmValues = new Map<number, PinPwmResponse>();
+  const pwmValues = new Map<number, PinPwmValue>();
 
   for (const message of messages) {
     if (isPinReadResponse(message)) {
       pinValues.set(message.pin, message);
+      pinModes.set(message.pin, message.mode);
+      if (message.mode === "pwm" && typeof message.value === "number") {
+        pwmValues.set(message.pin, {
+          duty_cycle: message.value,
+          active: true,
+        });
+      }
     }
     if (isPinModeResponse(message)) pinModes.set(message.pin, message.mode);
-    if (isPinPwmResponse(message)) pwmValues.set(message.pin, message);
+    if (isPinPwmResponse(message)) {
+      pwmValues.set(message.pin, {
+        duty_cycle: message.duty_cycle,
+        frequency: message.frequency,
+        active: message.action === "pwm_set",
+      });
+    }
   }
 
   return {

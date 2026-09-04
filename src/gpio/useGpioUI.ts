@@ -9,10 +9,7 @@ export function useGpioUI() {
 
     if (gpio.pinModes.get(pin) === "pwm") {
       const pwm = gpio.pwmValues.get(pin);
-      console.log("pwm", pin, pwm);
-      return pwm?.action === "pwm_set"
-        ? `${pwm.duty_cycle}% at ${pwm.frequency}Hz`
-        : "Stopped";
+      return pwm ? `${pwm.duty_cycle}%` : "PWM unavailable";
     }
 
     const response = pinValues.get(pin);
