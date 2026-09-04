@@ -1,10 +1,9 @@
-import { ShellWebSocket } from "./components/ShellWebSocket";
 import { WebSocketStatus } from "./components/WebSocketStatus";
-import { GpioMonitor } from "./gpio/GpioMonitor";
 import { GpioSettings } from "./gpio/GpioSettings";
 import { WebSocketProvider } from "./context/WebSocketProvider";
 import { GpioProvider } from "./context/GpioProvider";
 import { Sidebar } from "./components/Sidebar";
+import { Dashboard } from "./components/Dashboard";
 import type { Page } from "./components/Sidebar";
 import { useState } from "react";
 
@@ -56,10 +55,7 @@ function AppContent({
               <GpioSettings />
             </>
           ) : (
-            <>
-              <GpioMonitor />
-              <ShellWebSocket />
-            </>
+            <Dashboard />
           )}
         </div>
       </main>
