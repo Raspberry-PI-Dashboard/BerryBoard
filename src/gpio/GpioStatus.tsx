@@ -6,18 +6,20 @@ export function GpioStatus({ pin }: { pin: number }) {
   const { getPinLabel, getPinStatus, isConnected } = useGpioUI();
 
   return (
-    <CardPanel className="flex min-h-32 w-full items-center" key={pin}>
-      <div className="flex flex-col items-start gap-2">
+    <CardPanel className="relative flex min-h-28 w-full items-center" key={pin}>
+      <div className="flex w-full items-center justify-between gap-3 pt-1">
         <div
           className={clsx(
-            "h-2 w-8 rounded-full font-bold mb-2",
+            "absolute inset-x-0 top-0 h-1",
             isConnected ? "bg-green-500" : "bg-red-500",
           )}
         />
-        <span className="font-mono text-lg text-slate-100">
+        <span className="whitespace-nowrap font-mono text-lg text-slate-100">
           {getPinLabel(pin)}
         </span>
-        <span className="text-sm text-slate-400">{getPinStatus(pin)}</span>
+        <span className="min-w-0 max-w-1/2 truncate rounded-md border border-slate-800 px-2 py-1 text-sm text-slate-400">
+          {getPinStatus(pin)}
+        </span>
       </div>
     </CardPanel>
   );
