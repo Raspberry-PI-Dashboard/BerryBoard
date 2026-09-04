@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import type { PinMode } from "../ws/protocol";
 import { CardPanel, Section, Subsection } from "../layouts/Section";
-import { Button, Input } from "../layouts/StyledComponents";
+import { Button, Input, Select } from "../layouts/StyledComponents";
 import { useGpioUI } from "./useGpioUI";
 
 export function GpioSettings() {
@@ -73,35 +73,29 @@ export function GpioSettings() {
           className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] sm:items-end"
           disabled={!isConnected}
         >
-          <label className="flex min-w-0 flex-col gap-1 text-sm text-slate-400" htmlFor="mode-pin">
-            Pin
-            <select
-              className="min-w-0 rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 font-mono text-slate-100 outline-none focus:border-cyan-400"
-              id="mode-pin"
-              onChange={(event) => setSelectedPin(Number(event.target.value))}
-              value={selectedPin}
-            >
+          <Select
+            id="mode-pin"
+            label="Pin"
+            onChange={(event) => setSelectedPin(Number(event.target.value))}
+            value={selectedPin}
+          >
               {allowedPins.map((pin) => (
                 <option key={pin} value={pin}>
                   GPIO {pin}
                 </option>
               ))}
-            </select>
-          </label>
+          </Select>
 
-          <label className="flex min-w-0 flex-col gap-1 text-sm text-slate-400" htmlFor="pin-mode">
-            Mode
-            <select
-              className="min-w-0 rounded-lg border border-slate-700 bg-slate-950 px-3 py-2 font-mono text-slate-100 outline-none focus:border-cyan-400"
-              id="pin-mode"
-              onChange={(event) => setSelectedMode(event.target.value as PinMode)}
-              value={selectedMode}
-            >
+          <Select
+            id="pin-mode"
+            label="Mode"
+            onChange={(event) => setSelectedMode(event.target.value as PinMode)}
+            value={selectedMode}
+          >
               <option value="input">Input</option>
               <option value="output">Output</option>
               {supportsPwm && <option value="pwm">PWM</option>}
-            </select>
-          </label>
+          </Select>
 
           <label className="flex items-center gap-2 self-end pb-2 text-sm text-slate-400" htmlFor="selected-pin-monitor">
             <Input
