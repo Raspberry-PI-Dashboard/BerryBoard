@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import type { HTMLAttributes, ReactNode } from "react";
+import type { HTMLAttributes, ReactNode, Ref } from "react";
 
 export function Section({
   children,
@@ -85,9 +85,10 @@ export function SectionError({
 export function CardPanel({
   className,
   children,
+  ref,
   Title,
   ...props
-}: HTMLAttributes<HTMLElement> & { Title?: ReactNode }) {
+}: HTMLAttributes<HTMLElement> & { Title?: ReactNode; ref?: Ref<HTMLDivElement> }) {
   return (
     <div
       className={clsx(
@@ -98,6 +99,7 @@ export function CardPanel({
         "font-mono text-sm text-slate-300",
         className,
       )}
+      ref={ref}
       {...props}
     >
       {children}

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { CardPanel, Section, SectionError } from "../layouts/Section";
 import { Button, Input } from "../layouts/StyledComponents";
 import { useShell } from "../hooks/useShell";
@@ -13,6 +13,12 @@ export function ShellWebSocket() {
     runCommand,
   } = useShell();
   const [command, setCommand] = useState("");
+  const outputRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const output = outputRef.current;
+    if (output) output.scrollTop = output.scrollHeight;
+  }, [shellMessages]);
 
   return (
     <Section
@@ -26,7 +32,7 @@ export function ShellWebSocket() {
         )
       }
     >
-      <fieldset disabled={!isConnected}>
+      <fieldset disabled={!isConnected || !shellStarted}>
         <form
           className="mt-4 flex gap-3"
           onSubmit={(event) => {
@@ -40,7 +46,7 @@ export function ShellWebSocket() {
             value={command}
           />
           <Button
-            disabled={!command || !shellStarted}
+            disabled={!command}
             type="submit"
             variant="filled"
           >
@@ -62,7 +68,7 @@ export function ShellWebSocket() {
         </SectionError>
       )}
 
-      <CardPanel className="h-80">
+      <CardPanel className="h-80" ref={outputRef}>
         {shellMessages.length === 0
           ? ""
           : shellMessages.map((message, index) => (
