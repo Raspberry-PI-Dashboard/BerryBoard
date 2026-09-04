@@ -1,5 +1,6 @@
 import { useState } from "react";
-import { getWebSocketUrlError, saveUrl } from "../hooks/useWebSocket";
+import { getWebSocketUrlError } from "../hooks/useWebSocket";
+import { useCookie } from "../hooks/useCookie";
 import { useWebSocketContext } from "../context/WebSocketContext";
 import { Section, SectionError } from "../layouts/Section";
 import { Badge, Button, Input } from "../layouts/StyledComponents";
@@ -7,6 +8,10 @@ import clsx from "clsx";
 
 export function WebSocketStatus() {
   const [saved, setSaved] = useState(false);
+  const [, setSavedUrl] = useCookie("websocket-url", "", {
+    serialize: (value) => value,
+    deserialize: (value) => value,
+  });
   const { url, setUrl, status, error, isConnected } = useWebSocketContext();
 
   return (
@@ -31,7 +36,7 @@ export function WebSocketStatus() {
         <Button
           disabled={Boolean(getWebSocketUrlError(url))}
           onClick={() => {
-            saveUrl(url);
+            setSavedUrl(url);
             setSaved(true);
           }}
           type="button"
@@ -47,6 +52,10 @@ export function WebSocketStatus() {
 
 export function WebSocketStatusMini({ isOpen }: { isOpen: boolean }) {
   const [saved, setSaved] = useState(false);
+  const [, setSavedUrl] = useCookie("websocket-url", "", {
+    serialize: (value) => value,
+    deserialize: (value) => value,
+  });
   const { url, setUrl, status, error, isConnected } = useWebSocketContext();
 
   return (
@@ -71,7 +80,7 @@ export function WebSocketStatusMini({ isOpen }: { isOpen: boolean }) {
         <Button
           disabled={Boolean(getWebSocketUrlError(url))}
           onClick={() => {
-            saveUrl(url);
+            setSavedUrl(url);
             setSaved(true);
           }}
           type="button"

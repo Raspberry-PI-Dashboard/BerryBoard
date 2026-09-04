@@ -5,6 +5,8 @@ export function useGpioUI() {
 
   // UI
   function getPinStatus(pin: number): string {
+    if (!gpio.monitoredPins.get(pin)) return "Not monitored";
+
     const response = pinValues.get(pin);
     return response ? (response.value ? "High" : "Low") : "No reading";
   }
