@@ -13,6 +13,7 @@ export type WebSocketRequest =
   | PinToggleRequest
   | PinPwmSetRequest
   | PinPwmStopRequest
+  | UpdateRequest
   | I2CRequest
   | ShellRequest;
 
@@ -21,6 +22,7 @@ export type WebSocketMessage =
   | ConnectedMessage
   | InfoResponse
   | ServerShutdownMessage
+  | UpdateMessage
   | ErrorMessage;
 
 export type WebSocketResponse =
@@ -45,6 +47,15 @@ export type ConnectedMessage = {
 
 export type ServerShutdownMessage = {
   type: "server_shutdown";
+};
+
+export type UpdateRequest = {
+  type: "update";
+};
+
+export type UpdateMessage = {
+  type: "update";
+  [key: string]: unknown;
 };
 
 export type ErrorMessage =

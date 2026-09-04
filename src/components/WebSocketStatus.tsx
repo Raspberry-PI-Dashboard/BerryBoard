@@ -5,6 +5,7 @@ import { useWebSocketContext } from "../context/WebSocketContext";
 import { Section, SectionError } from "../layouts/Section";
 import { Badge, Button, Input } from "../layouts/StyledComponents";
 import clsx from "clsx";
+import type { UpdateMessage } from "../ws/protocol";
 
 export function WebSocketStatus() {
   const [saved, setSaved] = useState(false);
@@ -12,7 +13,12 @@ export function WebSocketStatus() {
     serialize: (value) => value,
     deserialize: (value) => value,
   });
-  const { url, setUrl, status, error, isConnected } = useWebSocketContext();
+  const { url, setUrl, status, error, isConnected, messages, sendMessage } =
+    useWebSocketContext();
+  const updateMessages = messages.filter(
+    (message): message is UpdateMessage =>
+      "type" in message && message.type === "update",
+  );
 
   return (
     <Section
@@ -46,6 +52,35 @@ export function WebSocketStatus() {
       </div>
 
       {error && <SectionError>{error}</SectionError>}
+
+      <div className="mt-6 border-t border-slate-800 pt-6">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <h2 className="text-sm font-semibold text-slate-200">
+              Server update
+            </h2>
+            <p className="mt-1 text-sm text-slate-500">
+              Deploy the configured branch and restart the gateway service.
+            </p>
+          </div>
+          <Button
+            disabled={!isConnected}
+            onClick={() => sendMessage({ type: "update" })}
+            type="button"
+          >
+            Update server
+          </Button>
+        </div>
+        {updateMessages.length > 0 && (
+          <div className="mt-4 max-h-48 overflow-y-auto rounded-lg border border-slate-800 bg-slate-950 p-3 font-mono text-sm text-slate-400">
+            {updateMessages.map((message, index) => (
+              <pre className="whitespace-pre-wrap" key={index}>
+                {JSON.stringify(message, null, 2)}
+              </pre>
+            ))}
+          </div>
+        )}
+      </div>
     </Section>
   );
 }

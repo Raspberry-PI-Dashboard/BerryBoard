@@ -27,18 +27,25 @@ export function Dashboard() {
     <div className="grid items-start gap-6 lg:grid-cols-2">
       {widgetOrder.map((widget) => (
         <div
-          className="relative cursor-grab active:cursor-grabbing lg:sticky lg:top-6"
-          draggable
+          className="relative lg:sticky lg:top-6"
           key={widget}
-          onDragEnd={() => setDraggedWidget(null)}
           onDragOver={(event) => event.preventDefault()}
-          onDragStart={() => setDraggedWidget(widget)}
           onDrop={() => {
             if (draggedWidget) moveWidget(draggedWidget, widget);
             setDraggedWidget(null);
           }}
-          title={`Move ${widgetLabels[widget]} widget`}
         >
+          <button
+            aria-label={`Move ${widgetLabels[widget]} widget`}
+            className="absolute right-3 top-3 z-10 cursor-grab rounded border border-slate-700 bg-slate-950 px-2 py-1 text-sm leading-none text-slate-500 hover:text-slate-100 active:cursor-grabbing"
+            draggable
+            onDragEnd={() => setDraggedWidget(null)}
+            onDragStart={() => setDraggedWidget(widget)}
+            title={`Move ${widgetLabels[widget]} widget`}
+            type="button"
+          >
+            ⋮⋮
+          </button>
           {widgets[widget]}
         </div>
       ))}

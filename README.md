@@ -49,11 +49,18 @@ views:
 
 The monitor also includes a remote shell. Select **Start shell**, enter a
 command, and select **Run** when the connection is ready. Shell output and
-server errors are displayed in the dashboard.
+server errors are displayed in the dashboard. Press `Ctrl+C` while the command
+input is focused to send an interrupt and cancel the running command; the input
+is cleared afterward.
 
 Changing the endpoint reconnects the client. Select **Save URL** to store a
 valid endpoint in a browser cookie for one year; it is restored on the next
 page load. The client validates that URLs use `ws://` or `wss://`.
+
+From **Settings**, select **Update server** to deploy the latest configured
+branch and restart the `berryboard.service` systemd service. Progress messages
+appear in the update log. The WebSocket connection closes while the gateway
+restarts; reconnect after the service becomes active.
 
 ## WebSocket Protocol
 
@@ -64,11 +71,14 @@ uses these requests:
 {"type":"pin","action":"read","pin":17}
 {"type":"shell_start"}
 {"type":"shell_input","data":"uname -a"}
+{"type":"shell_input","data":"\u0003"}
+{"type":"update"}
 ```
 
 It handles connection and error messages, GPIO read responses, and shell
-startup/output responses. The TypeScript request and response definitions are
-in `src/ws/protocol.ts`; the server must implement the corresponding protocol.
+startup/output responses, and update progress messages with `type: "update"`.
+The TypeScript request and response definitions are in `src/ws/protocol.ts`; the
+server must implement the corresponding protocol.
 
 ## Commands
 

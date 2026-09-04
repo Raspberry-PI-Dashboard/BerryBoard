@@ -11,6 +11,7 @@ export function ShellWebSocket() {
     isConnected,
     startShell,
     runCommand,
+    cancelCommand,
   } = useShell();
   const [command, setCommand] = useState("");
   const outputRef = useRef<HTMLDivElement>(null);
@@ -32,28 +33,36 @@ export function ShellWebSocket() {
         )
       }
     >
-      <fieldset disabled={!isConnected || !shellStarted}>
-        <form
-          className="mt-4 flex gap-3"
-          onSubmit={(event) => {
-            event.preventDefault();
-            runCommand(command, () => setCommand(""));
-          }}
+      <div className="mt-4 flex items-start gap-3">
+        <fieldset
+          className="min-w-0 flex-1"
+          disabled={!isConnected || !shellStarted}
         >
-          <Input
-            onChange={(event) => setCommand(event.target.value)}
-            placeholder="Enter a shell command"
-            value={command}
-          />
-          <Button
-            disabled={!command}
-            type="submit"
-            variant="filled"
+          <form
+            className="flex gap-3"
+            onSubmit={(event) => {
+              event.preventDefault();
+              runCommand(command, () => setCommand(""));
+            }}
           >
-            Run
-          </Button>
-        </form>
-      </fieldset>
+            <Input
+              onChange={(event) => setCommand(event.target.value)}
+              onKeyDown={(event) => {
+                if (event.ctrlKey && event.key.toLowerCase() === "c") {
+                  event.preventDefault();
+                  cancelCommand();
+                  setCommand("");
+                }
+              }}
+              placeholder="Enter a shell command. Ctrl+C to cancel."
+              value={command}
+            />
+            <Button disabled={!command} type="submit" variant="filled">
+              Run
+            </Button>
+          </form>
+        </fieldset>
+      </div>
 
       {shellErrors.length > 0 && (
         <SectionError className="max-h-48 overflow-y-auto" title="Shell Errors">

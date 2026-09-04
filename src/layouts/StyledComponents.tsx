@@ -190,6 +190,34 @@ export function Checkbox({
   );
 }
 
+export function InfoPopup({
+  message,
+  label = "Info",
+}: {
+  message: string;
+  label?: string;
+}) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="relative shrink-0">
+      <button
+        aria-expanded={open}
+        className="rounded border border-slate-700 px-2 py-1 text-sm text-slate-400 hover:border-cyan-400 hover:text-cyan-300"
+        onClick={() => setOpen((isOpen) => !isOpen)}
+        type="button"
+      >
+        {label}
+      </button>
+      {open && (
+        <div className="absolute right-0 top-10 z-10 w-56 rounded-lg border border-slate-700 bg-slate-950 p-3 text-sm text-slate-300 shadow-xl">
+          {message}
+        </div>
+      )}
+    </div>
+  );
+}
+
 type BadgeVariant = "ok" | "warning" | "error";
 
 export function Badge({
