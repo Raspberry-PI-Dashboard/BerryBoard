@@ -85,10 +85,6 @@ function useGpioPolling(readPin: (pin: number) => void, isConnected: boolean) {
 
 export function useGpio() {
   const { messages, status, sendMessage } = useWebSocketContext();
-  const [savedPinModes, setSavedPinModes] = useCookie<Record<string, PinMode>>(
-    "pin-modes",
-    {},
-  );
 
   // WS
   const isConnected = status === "Connected";
@@ -102,8 +98,7 @@ export function useGpio() {
   }
 
   function setPinMode(pin: number, mode: PinMode) {
-    if (!sendMessage({ type: "pin", action: "mode", pin, mode })) return;
-    setSavedPinModes((currentModes) => ({ ...currentModes, [pin]: mode }));
+    sendMessage({ type: "pin", action: "mode", pin, mode });
   }
 
   function setPinPWM(pin: number, duty_cycle: number, frequency?: number) {
@@ -129,9 +124,7 @@ export function useGpio() {
   const allowedPins = [17, 18, 22, 23, 24, 25];
   const pwmPins = [18];
   const pinValues = new Map<number, PinReadResponse>();
-  const pinModes = new Map<number, PinMode>(
-    Object.entries(savedPinModes).map(([pin, mode]) => [Number(pin), mode]),
-  );
+  const pinModes = new Map<number, PinMode>();
   const pwmValues = new Map<number, PinPwmResponse>();
 
   for (const message of messages) {
