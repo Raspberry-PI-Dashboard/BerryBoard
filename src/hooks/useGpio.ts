@@ -91,6 +91,9 @@ function useGpioPolling(readPin: (pin: number) => void, isConnected: boolean) {
 
 export function useGpio() {
   const { messages, status, sendMessage } = useWebSocketContext();
+  const allowedPins = [17, 18, 22, 23, 24, 25];
+  const pwmPins = [18];
+  const [selectedPwmPin, setSelectedPwmPin] = useState(pwmPins[0]);
 
   // WS
   const isConnected = status === "Connected";
@@ -127,8 +130,6 @@ export function useGpio() {
     setRefreshInterval,
   } = useGpioPolling(readPin, isConnected);
 
-  const allowedPins = [17, 18, 22, 23, 24, 25];
-  const pwmPins = [18];
   const pinValues = new Map<number, PinReadResponse>();
   const pinModes = new Map<number, PinMode>();
   const pwmValues = new Map<number, PinPwmValue>();
@@ -162,6 +163,8 @@ export function useGpio() {
     pwmValues,
     allowedPins,
     pwmPins,
+    selectedPwmPin,
+    setSelectedPwmPin,
     monitoredPins,
     setMonitoredPins,
 

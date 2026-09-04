@@ -1,22 +1,25 @@
 import { useState } from "react";
 import { GpioMonitor } from "../gpio/GpioMonitor";
 import { GpioWidget } from "../gpio/GpioWidget";
+import { GpioCalibration } from "../gpio/GpioCalibration";
 import { ShellWebSocket } from "./ShellWebSocket";
 import { useWidgetLayout } from "../hooks/useWidgetLayout";
 import { useWidgetVisibility } from "../hooks/useWidgetVisibility";
 
-const defaultWidgetOrder = ["pinout", "gpio", "shell"] as const;
+const defaultWidgetOrder = ["pinout", "gpio", "calibration", "shell"] as const;
 type WidgetId = (typeof defaultWidgetOrder)[number];
 
 const widgets: Record<WidgetId, React.ReactNode> = {
   pinout: <GpioMonitor />,
   gpio: <GpioWidget />,
+  calibration: <GpioCalibration />,
   shell: <ShellWebSocket />,
 };
 
 const widgetLabels: Record<WidgetId, string> = {
   pinout: "GPIO pinout",
   gpio: "GPIO monitoring",
+  calibration: "PWM calibration",
   shell: "Remote shell",
 };
 

@@ -14,6 +14,8 @@ export function GpioSettings() {
     setRefreshInterval,
     allowedPins,
     pwmPins,
+    selectedPwmPin,
+    setSelectedPwmPin,
     pinModes,
     monitoredPins,
     setMonitoredPins,
@@ -67,6 +69,21 @@ export function GpioSettings() {
             />
           ))}
         </div>
+      </Subsection>
+
+      <Subsection subtitle="PWM calibration">
+        <Select
+          id="calibration-pin"
+          label="PWM pin"
+          onChange={(event) => setSelectedPwmPin(Number(event.target.value))}
+          value={selectedPwmPin}
+        >
+          {pwmPins.map((pin) => (
+            <option key={pin} value={pin}>
+              GPIO {pin}
+            </option>
+          ))}
+        </Select>
       </Subsection>
 
       <Subsection subtitle="Select which pins to monitor">
