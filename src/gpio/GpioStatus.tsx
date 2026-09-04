@@ -6,7 +6,7 @@ export function GpioStatus({ pin }: { pin: number }) {
   const { getPinLabel, getPinStatus, isConnected } = useGpioUI();
 
   return (
-    <CardPanel className="flex items-center justify-between w-40" key={pin}>
+    <CardPanel className="flex min-h-32 w-full items-center" key={pin}>
       <div className="flex flex-col items-start gap-2">
         <div
           className={clsx(

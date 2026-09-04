@@ -15,7 +15,7 @@ export function Section({
       className={clsx(
         "mx-auto w-full max-w-2xl",
         "rounded-2xl border border-slate-800 bg-slate-900 shadow-2xl",
-        "p-8",
+        "p-4 sm:p-8",
         // "flex flex-col gap-6 items-start",
         className,
       )}

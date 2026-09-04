@@ -62,7 +62,9 @@ export function WebSocketStatusMini({ isOpen }: { isOpen: boolean }) {
     <div
       className={clsx(
         "flex flex-col gap-2 items-start p-2",
-        isOpen ? "w-auto opacity-100" : "w-0 opacity-0",
+        isOpen
+          ? "w-0 opacity-0 sm:w-auto sm:opacity-100"
+          : "w-0 opacity-0",
         "duration-300",
       )}
     >
