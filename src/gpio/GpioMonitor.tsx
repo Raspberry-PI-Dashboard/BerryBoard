@@ -7,10 +7,11 @@ export function GpioMonitor() {
 
   return (
     <Section
+      className="flex h-full flex-col"
       Title="GPIO Monitoring"
       Accessory={"update: " + refreshInterval + "s"}
     >
-      <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,10rem),1fr))] gap-3">
+      <div className="grid flex-1 auto-rows-fr grid-cols-[repeat(auto-fit,minmax(min(100%,10rem),1fr))] gap-4">
         {allowedPins.map((pin) => {
           return <GpioStatus key={pin} pin={pin} />;
         })}

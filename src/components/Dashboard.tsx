@@ -24,10 +24,10 @@ export function Dashboard() {
   const [draggedWidget, setDraggedWidget] = useState<WidgetId | null>(null);
 
   return (
-    <div className="grid items-start gap-6 lg:grid-cols-2">
+    <div className="grid items-stretch gap-6 lg:grid-cols-2">
       {widgetOrder.map((widget) => (
         <div
-          className="relative lg:sticky lg:top-6"
+          className="relative flex h-full lg:sticky lg:top-6"
           key={widget}
           onDragOver={(event) => event.preventDefault()}
           onDrop={() => {

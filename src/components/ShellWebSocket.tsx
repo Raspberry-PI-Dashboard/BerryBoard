@@ -19,7 +19,7 @@ export function ShellWebSocket() {
 
   return (
     <Section
-      className="flex flex-col gap-2"
+      className="flex h-full flex-col gap-2"
       Title="Remote shell"
       Accessory={
         !shellStarted && (
