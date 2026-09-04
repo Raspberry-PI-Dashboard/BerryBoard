@@ -1,5 +1,6 @@
-import { CardPanel, Section } from "../layouts/Section";
+import { Section } from "../layouts/Section";
 import { Button } from "../layouts/StyledComponents";
+import { GpioStatus } from "./GpioStatus";
 import { useGpioUI } from "./useGpioUI";
 
 export function GpioWidget() {
@@ -24,45 +25,12 @@ export function GpioWidget() {
 }
 
 function MonitoredPin({ pin }: { pin: number }) {
-  const {
-    getPinLabel,
-    getPinMode,
-    getPinModeValue,
-    getPinStatus,
-    getPinValue,
-    isConnected,
-    pwmPins,
-    setPin,
-    setPinPWM,
-    togglePin,
-  } = useGpioUI();
+  const { getPinModeValue, isConnected, pwmPins, setPin, setPinPWM, togglePin } =
+    useGpioUI();
   const mode = getPinModeValue(pin);
-  const value = getPinValue(pin);
 
   return (
-    <CardPanel className="flex min-h-32 flex-col justify-between gap-4">
-      <div className="flex items-start justify-between gap-3">
-        <div className="min-w-0">
-          <span className="block whitespace-nowrap font-mono text-lg text-slate-100">
-            {getPinLabel(pin)}
-          </span>
-          <span className="block text-xs uppercase tracking-wide text-slate-500">
-            {getPinMode(pin)}
-          </span>
-        </div>
-        <span className="min-w-0 max-w-1/2 truncate rounded-md border border-slate-800 px-2 py-1 text-sm text-slate-400">
-          {getPinStatus(pin)}
-        </span>
-      </div>
-
-      {mode === "input" && typeof value === "boolean" && (
-        <div
-          aria-label={value ? "High" : "Low"}
-          className={`mx-auto h-16 w-16 rounded-full border-4 border-slate-800 ${value ? "bg-green-500" : "bg-red-500"}`}
-          role="img"
-        />
-      )}
-
+    <GpioStatus pin={pin}>
       {mode === "output" && (
         <fieldset className="flex flex-wrap gap-2" disabled={!isConnected}>
           <Button onClick={() => setPin(pin, true)} type="button">
@@ -90,6 +58,6 @@ function MonitoredPin({ pin }: { pin: number }) {
           ))}
         </fieldset>
       )}
-    </CardPanel>
+    </GpioStatus>
   );
 }
