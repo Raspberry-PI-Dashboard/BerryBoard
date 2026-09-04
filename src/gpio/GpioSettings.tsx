@@ -10,13 +10,16 @@ export function GpioSettings() {
     setRefreshInterval,
     allowedPins,
     pwmPins,
+    pinModes,
     monitoredPins,
     setMonitoredPins,
     setPinMode,
     isConnected,
   } = useGpioUI();
   const [selectedPin, setSelectedPin] = useState(allowedPins[0]);
-  const [selectedMode, setSelectedMode] = useState<PinMode>("input");
+  const [selectedMode, setSelectedMode] = useState<PinMode>(
+    pinModes.get(allowedPins[0]) ?? "input",
+  );
   const supportsPwm = pwmPins.includes(selectedPin);
 
   useEffect(() => {
@@ -76,7 +79,11 @@ export function GpioSettings() {
           <Select
             id="mode-pin"
             label="Pin"
-            onChange={(event) => setSelectedPin(Number(event.target.value))}
+            onChange={(event) => {
+              const pin = Number(event.target.value);
+              setSelectedPin(pin);
+              setSelectedMode(pinModes.get(pin) ?? "input");
+            }}
             value={selectedPin}
           >
               {allowedPins.map((pin) => (
