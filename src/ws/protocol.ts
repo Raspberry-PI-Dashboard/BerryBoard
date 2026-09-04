@@ -9,6 +9,7 @@ export type WebSocketRequest =
   | InfoRequest
   | PinReadRequest
   | PinSetRequest
+  | PinModeRequest
   | PinToggleRequest
   | PinPwmSetRequest
   | PinPwmStopRequest

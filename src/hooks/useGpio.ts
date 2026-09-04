@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import type { PinReadResponse, WebSocketMessage } from "../ws/protocol";
+import type { PinMode, PinReadResponse, WebSocketMessage } from "../ws/protocol";
 import { useWebSocketContext } from "../context/WebSocketContext";
 import { useCookie } from "./useCookie";
 
@@ -73,6 +73,10 @@ export function useGpio() {
     sendMessage({ type: "pin", action: "set", pin, value });
   }
 
+  function setPinMode(pin: number, mode: PinMode) {
+    sendMessage({ type: "pin", action: "mode", pin, mode });
+  }
+
   function setPinPWM(pin: number, duty_cycle: number, frequency?: number) {
     sendMessage({ type: "pin", action: "pwm_set", pin, duty_cycle, frequency });
   }
@@ -94,6 +98,7 @@ export function useGpio() {
   } = useGpioPolling(readPin, isConnected);
 
   const allowedPins = [17, 18, 22, 23, 24, 25];
+  const pwmPins = [18];
   const pinValues = new Map<number, PinReadResponse>();
 
   for (const message of messages) {
@@ -108,11 +113,13 @@ export function useGpio() {
 
     pinValues,
     allowedPins,
+    pwmPins,
     monitoredPins,
     setMonitoredPins,
 
     readPin,
     setPin,
+    setPinMode,
     togglePin,
     setPinPWM,
     stopPinPWM,
