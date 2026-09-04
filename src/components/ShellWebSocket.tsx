@@ -1,7 +1,8 @@
-import { useEffect, useRef, useState } from "react";
-import { CardPanel, Section, SectionError } from "../layouts/Section";
+import { useState } from "react";
+import { Section, SectionError } from "../layouts/Section";
 import { Button, Input } from "../layouts/StyledComponents";
 import { useShell } from "../hooks/useShell";
+import { AutoScrollPanel } from "./AutoScrollPanel";
 
 export function ShellWebSocket() {
   const {
@@ -14,12 +15,7 @@ export function ShellWebSocket() {
     cancelCommand,
   } = useShell();
   const [command, setCommand] = useState("");
-  const outputRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const output = outputRef.current;
-    if (output) output.scrollTop = output.scrollHeight;
-  }, [shellMessages]);
+  const shellOutputText = shellMessages.map((message) => message.data).join("\n");
 
   return (
     <Section
@@ -77,7 +73,11 @@ export function ShellWebSocket() {
         </SectionError>
       )}
 
-      <CardPanel className="h-80" ref={outputRef}>
+      <AutoScrollPanel
+        className="h-80"
+        contentKey={shellMessages.length}
+        copyText={shellOutputText}
+      >
         {shellMessages.length === 0
           ? ""
           : shellMessages.map((message, index) => (
@@ -88,7 +88,7 @@ export function ShellWebSocket() {
                 {message.data}
               </pre>
             ))}
-      </CardPanel>
+      </AutoScrollPanel>
     </Section>
   );
 }

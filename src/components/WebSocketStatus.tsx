@@ -6,6 +6,7 @@ import { Section, SectionError } from "../layouts/Section";
 import { Badge, Button, Input } from "../layouts/StyledComponents";
 import clsx from "clsx";
 import type { UpdateMessage } from "../ws/protocol";
+import { AutoScrollPanel } from "./AutoScrollPanel";
 
 export function WebSocketStatus() {
   const [saved, setSaved] = useState(false);
@@ -19,6 +20,9 @@ export function WebSocketStatus() {
     (message): message is UpdateMessage =>
       "type" in message && message.type === "update",
   );
+  const updateText = updateMessages
+    .map((message) => JSON.stringify(message, null, 2))
+    .join("\n");
 
   return (
     <Section
@@ -72,13 +76,17 @@ export function WebSocketStatus() {
           </Button>
         </div>
         {updateMessages.length > 0 && (
-          <div className="mt-4 max-h-48 overflow-y-auto rounded-lg border border-slate-800 bg-slate-950 p-3 font-mono text-sm text-slate-400">
+          <AutoScrollPanel
+            className="mt-4 max-h-48 p-3"
+            contentKey={updateMessages.length}
+            copyText={updateText}
+          >
             {updateMessages.map((message, index) => (
               <pre className="whitespace-pre-wrap" key={index}>
                 {JSON.stringify(message, null, 2)}
               </pre>
             ))}
-          </div>
+          </AutoScrollPanel>
         )}
       </div>
     </Section>

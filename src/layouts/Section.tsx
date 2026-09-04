@@ -88,7 +88,7 @@ export function CardPanel({
   ref,
   Title,
   ...props
-}: HTMLAttributes<HTMLElement> & { Title?: ReactNode; ref?: Ref<HTMLDivElement> }) {
+}: HTMLAttributes<HTMLDivElement> & { Title?: ReactNode; ref?: Ref<HTMLDivElement> }) {
   return (
     <div
       className={clsx(
