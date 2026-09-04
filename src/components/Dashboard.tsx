@@ -2,6 +2,7 @@ import { useState } from "react";
 import { GpioMonitor } from "../gpio/GpioMonitor";
 import { ShellWebSocket } from "./ShellWebSocket";
 import { useWidgetLayout } from "../hooks/useWidgetLayout";
+import { useWidgetVisibility } from "../hooks/useWidgetVisibility";
 
 const defaultWidgetOrder = ["gpio", "shell"] as const;
 type WidgetId = (typeof defaultWidgetOrder)[number];
@@ -21,11 +22,12 @@ export function Dashboard() {
     "dashboard-widget-order",
     defaultWidgetOrder,
   );
+  const { isWidgetVisible } = useWidgetVisibility();
   const [draggedWidget, setDraggedWidget] = useState<WidgetId | null>(null);
 
   return (
     <div className="grid items-stretch gap-6 lg:grid-cols-2">
-      {widgetOrder.map((widget) => (
+      {widgetOrder.filter(isWidgetVisible).map((widget) => (
         <div
           className="relative flex h-full lg:sticky lg:top-6"
           key={widget}

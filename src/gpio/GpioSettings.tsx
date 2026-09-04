@@ -3,6 +3,10 @@ import type { PinMode } from "../ws/protocol";
 import { CardPanel, Section, Subsection } from "../layouts/Section";
 import { Button, Checkbox, Input, Select } from "../layouts/StyledComponents";
 import { useGpioUI } from "./useGpioUI";
+import {
+  dashboardWidgets,
+  useWidgetVisibility,
+} from "../hooks/useWidgetVisibility";
 
 export function GpioSettings() {
   const {
@@ -21,6 +25,7 @@ export function GpioSettings() {
     pinModes.get(allowedPins[0]) ?? "input",
   );
   const supportsPwm = pwmPins.includes(selectedPin);
+  const { isWidgetVisible, setWidgetVisible } = useWidgetVisibility();
 
   useEffect(() => {
     if (!supportsPwm && selectedMode === "pwm") setSelectedMode("input");
@@ -49,6 +54,19 @@ export function GpioSettings() {
           type="number"
           value={refreshInterval}
         />
+      </Subsection>
+
+      <Subsection subtitle="Dashboard widgets">
+        <div className="grid gap-3 sm:grid-cols-2">
+          {dashboardWidgets.map(({ id, label }) => (
+            <Checkbox
+              checked={isWidgetVisible(id)}
+              key={id}
+              label={label}
+              onChange={(event) => setWidgetVisible(id, event.target.checked)}
+            />
+          ))}
+        </div>
       </Subsection>
 
       <Subsection subtitle="Select which pins to monitor">
