@@ -1,5 +1,11 @@
 import { useEffect, useState } from "react";
-import type { PinMode, PinReadResponse, WebSocketMessage } from "../ws/protocol";
+import type {
+  PinMode,
+  PinModeResponse,
+  PinPwmResponse,
+  PinReadResponse,
+  WebSocketMessage,
+} from "../ws/protocol";
 import { useWebSocketContext } from "../context/WebSocketContext";
 import { useCookie } from "./useCookie";
 
@@ -8,6 +14,24 @@ function isPinReadResponse(
 ): message is PinReadResponse {
   return (
     "type" in message && message.type === "pin" && message.action === "read"
+  );
+}
+
+function isPinModeResponse(
+  message: WebSocketMessage,
+): message is PinModeResponse {
+  return (
+    "type" in message && message.type === "pin" && message.action === "mode"
+  );
+}
+
+function isPinPwmResponse(
+  message: WebSocketMessage,
+): message is PinPwmResponse {
+  return (
+    "type" in message &&
+    message.type === "pin" &&
+    (message.action === "pwm_set" || message.action === "pwm_stop")
   );
 }
 
@@ -100,18 +124,23 @@ export function useGpio() {
   const allowedPins = [17, 18, 22, 23, 24, 25];
   const pwmPins = [18];
   const pinValues = new Map<number, PinReadResponse>();
+  const pinModes = new Map<number, PinMode>();
+  const pwmValues = new Map<number, PinPwmResponse>();
 
   for (const message of messages) {
     if (isPinReadResponse(message)) {
-      console.log('Received pin read response:', message);
       pinValues.set(message.pin, message);
     }
+    if (isPinModeResponse(message)) pinModes.set(message.pin, message.mode);
+    if (isPinPwmResponse(message)) pwmValues.set(message.pin, message);
   }
 
   return {
     isConnected,
 
     pinValues,
+    pinModes,
+    pwmValues,
     allowedPins,
     pwmPins,
     monitoredPins,

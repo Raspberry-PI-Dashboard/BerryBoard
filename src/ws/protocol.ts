@@ -28,6 +28,7 @@ export type WebSocketMessage =
 export type WebSocketResponse =
   | PongResponse
   | InfoResponse
+  | PinModeResponse
   | PinReadResponse
   | PinSetResponse
   | PinToggleResponse

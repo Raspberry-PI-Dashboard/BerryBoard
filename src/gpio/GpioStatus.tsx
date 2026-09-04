@@ -3,7 +3,7 @@ import clsx from "clsx";
 import { useGpioUI } from "./useGpioUI";
 
 export function GpioStatus({ pin }: { pin: number }) {
-  const { getPinLabel, getPinStatus, isConnected } = useGpioUI();
+  const { getPinLabel, getPinMode, getPinStatus, isConnected } = useGpioUI();
 
   return (
     <CardPanel className="relative flex min-h-28 w-full items-center" key={pin}>
@@ -14,9 +14,14 @@ export function GpioStatus({ pin }: { pin: number }) {
             isConnected ? "bg-green-500" : "bg-red-500",
           )}
         />
-        <span className="whitespace-nowrap font-mono text-lg text-slate-100">
-          {getPinLabel(pin)}
-        </span>
+        <div className="min-w-0">
+          <span className="block whitespace-nowrap font-mono text-lg text-slate-100">
+            {getPinLabel(pin)}
+          </span>
+          <span className="block text-xs uppercase tracking-wide text-slate-500">
+            {getPinMode(pin)}
+          </span>
+        </div>
         <span className="min-w-0 max-w-1/2 truncate rounded-md border border-slate-800 px-2 py-1 text-sm text-slate-400">
           {getPinStatus(pin)}
         </span>

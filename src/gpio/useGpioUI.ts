@@ -7,6 +7,13 @@ export function useGpioUI() {
   function getPinStatus(pin: number): string {
     if (!gpio.monitoredPins.get(pin)) return "Not monitored";
 
+    if (gpio.pinModes.get(pin) === "pwm") {
+      const pwm = gpio.pwmValues.get(pin);
+      return pwm?.action === "pwm_set"
+        ? `${pwm.duty_cycle}% at ${pwm.frequency}Hz`
+        : "PWM stopped";
+    }
+
     const response = pinValues.get(pin);
     return response ? (response.value ? "High" : "Low") : "No reading";
   }
@@ -16,10 +23,8 @@ export function useGpioUI() {
   }
 
   function getPinMode(pin: number): string {
-    return pin + " Mode: To be implemented";
-
-    // const response = pinValues.get(pin);
-    // return response ? response.mode : "Unknown";
+    const mode = gpio.pinModes.get(pin) ?? "input";
+    return mode[0].toUpperCase() + mode.slice(1);
   }
 
   // Return the original gpio object along with the UI functions
