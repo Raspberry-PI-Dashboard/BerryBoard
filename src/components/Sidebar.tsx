@@ -43,7 +43,7 @@ export function Sidebar({
         )}
       >
         <div className="ml-3 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-cyan-400 font-bold text-slate-950">
-          ◉
+           <img alt="BerryBoard" className="h-full w-full rounded-md" src="/favicon.svg" />
         </div>
 
         <span
