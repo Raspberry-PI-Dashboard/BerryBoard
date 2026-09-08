@@ -1,6 +1,19 @@
 import { useEffect, useState } from "react";
-import type { PinReadResponse, WebSocketMessage } from "../ws/protocol";
+import type {
+  PinMode,
+  PinModeResponse,
+  PinPwmResponse,
+  PinReadResponse,
+  WebSocketMessage,
+} from "../ws/protocol";
 import { useWebSocketContext } from "../context/WebSocketContext";
+import { useCookie } from "./useCookie";
+
+type PinPwmValue = {
+  duty_cycle: number;
+  frequency?: number;
+  active: boolean;
+};
 
 function isPinReadResponse(
   message: WebSocketMessage,
@@ -10,11 +23,42 @@ function isPinReadResponse(
   );
 }
 
+function isPinModeResponse(
+  message: WebSocketMessage,
+): message is PinModeResponse {
+  return (
+    "type" in message && message.type === "pin" && message.action === "mode"
+  );
+}
+
+function isPinPwmResponse(
+  message: WebSocketMessage,
+): message is PinPwmResponse {
+  return (
+    "type" in message &&
+    message.type === "pin" &&
+    (message.action === "pwm_set" || message.action === "pwm_stop")
+  );
+}
+
 function useGpioPolling(readPin: (pin: number) => void, isConnected: boolean) {
   const [refreshInterval, setRefreshInterval] = useState(5);
-  const [monitoredPins, setMonitoredPins] = useState(
-    new Map<number, boolean>(),
+  const [savedPins, setSavedPins] = useCookie<number[]>(
+    "monitored-pins",
+    [],
   );
+  const monitoredPins = new Map<number, boolean>(
+    savedPins.map((pin) => [pin, true]),
+  );
+
+  function setMonitoredPins(nextPins: Map<number, boolean>) {
+    const pins = new Map(nextPins);
+    setSavedPins(
+      [...pins]
+        .filter(([, monitored]) => monitored)
+        .map(([pin]) => pin),
+    );
+  }
 
   function updateMonitoredPins() {
     const availablePins: number[] = [];
@@ -47,6 +91,9 @@ function useGpioPolling(readPin: (pin: number) => void, isConnected: boolean) {
 
 export function useGpio() {
   const { messages, status, sendMessage } = useWebSocketContext();
+  const allowedPins = [17, 18, 22, 23, 24, 25];
+  const pwmPins = [18];
+  const [selectedPwmPin, setSelectedPwmPin] = useState(pwmPins[0]);
 
   // WS
   const isConnected = status === "Connected";
@@ -57,6 +104,10 @@ export function useGpio() {
 
   function setPin(pin: number, value: boolean) {
     sendMessage({ type: "pin", action: "set", pin, value });
+  }
+
+  function setPinMode(pin: number, mode: PinMode) {
+    sendMessage({ type: "pin", action: "mode", pin, mode });
   }
 
   function setPinPWM(pin: number, duty_cycle: number, frequency?: number) {
@@ -79,23 +130,47 @@ export function useGpio() {
     setRefreshInterval,
   } = useGpioPolling(readPin, isConnected);
 
-  const allowedPins = [17, 18, 22, 23, 24, 25];
   const pinValues = new Map<number, PinReadResponse>();
+  const pinModes = new Map<number, PinMode>();
+  const pwmValues = new Map<number, PinPwmValue>();
 
   for (const message of messages) {
-    if (isPinReadResponse(message)) pinValues.set(message.pin, message);
+    if (isPinReadResponse(message)) {
+      pinValues.set(message.pin, message);
+      pinModes.set(message.pin, message.mode);
+      if (message.mode === "pwm" && typeof message.value === "number") {
+        pwmValues.set(message.pin, {
+          duty_cycle: message.value,
+          active: true,
+        });
+      }
+    }
+    if (isPinModeResponse(message)) pinModes.set(message.pin, message.mode);
+    if (isPinPwmResponse(message)) {
+      pwmValues.set(message.pin, {
+        duty_cycle: message.duty_cycle,
+        frequency: message.frequency,
+        active: message.action === "pwm_set",
+      });
+    }
   }
 
   return {
     isConnected,
 
     pinValues,
+    pinModes,
+    pwmValues,
     allowedPins,
+    pwmPins,
+    selectedPwmPin,
+    setSelectedPwmPin,
     monitoredPins,
     setMonitoredPins,
 
     readPin,
     setPin,
+    setPinMode,
     togglePin,
     setPinPWM,
     stopPinPWM,

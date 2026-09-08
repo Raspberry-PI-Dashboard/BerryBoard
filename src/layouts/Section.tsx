@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import type { HTMLAttributes, ReactNode } from "react";
+import type { HTMLAttributes, ReactNode, Ref } from "react";
 
 export function Section({
   children,
@@ -15,7 +15,7 @@ export function Section({
       className={clsx(
         "mx-auto w-full max-w-2xl",
         "rounded-2xl border border-cyan-400/60 bg-slate-900 neon-border-inset",
-        "p-8",
+        "p-4 sm:p-8",
         // "flex flex-col gap-6 items-start",
         className,
       )}
@@ -85,9 +85,10 @@ export function SectionError({
 export function CardPanel({
   className,
   children,
+  ref,
   Title,
   ...props
-}: HTMLAttributes<HTMLElement> & { Title?: ReactNode }) {
+}: HTMLAttributes<HTMLDivElement> & { Title?: ReactNode; ref?: Ref<HTMLDivElement> }) {
   return (
     <div
       className={clsx(
@@ -98,6 +99,7 @@ export function CardPanel({
         "font-mono text-sm text-slate-300",
         className,
       )}
+      ref={ref}
       {...props}
     >
       {children}

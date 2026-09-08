@@ -9,9 +9,11 @@ export type WebSocketRequest =
   | InfoRequest
   | PinReadRequest
   | PinSetRequest
+  | PinModeRequest
   | PinToggleRequest
   | PinPwmSetRequest
   | PinPwmStopRequest
+  | UpdateRequest
   | I2CRequest
   | ShellRequest;
 
@@ -20,11 +22,13 @@ export type WebSocketMessage =
   | ConnectedMessage
   | InfoResponse
   | ServerShutdownMessage
+  | UpdateMessage
   | ErrorMessage;
 
 export type WebSocketResponse =
   | PongResponse
   | InfoResponse
+  | PinModeResponse
   | PinReadResponse
   | PinSetResponse
   | PinToggleResponse
@@ -44,6 +48,15 @@ export type ConnectedMessage = {
 
 export type ServerShutdownMessage = {
   type: "server_shutdown";
+};
+
+export type UpdateRequest = {
+  type: "update";
+};
+
+export type UpdateMessage = {
+  type: "update";
+  [key: string]: unknown;
 };
 
 export type ErrorMessage =
@@ -136,7 +149,7 @@ export type PinPwmStopRequest = {
 };
 
 export type PinRequest =
-  | PinModeRequest,
+  | PinModeRequest
   | PinSetRequest
   | PinToggleRequest
   | PinReadRequest
@@ -164,7 +177,8 @@ export type PinReadResponse = {
   type: "pin";
   action: "read";
   pin: number;
-  value: boolean;
+  mode: PinMode;
+  value: boolean | number;
 };
 
 export type PinPwmResponse = {

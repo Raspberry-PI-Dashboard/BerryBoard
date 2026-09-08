@@ -1,8 +1,10 @@
 import clsx from "clsx";
+import { useState } from "react";
 import type {
   ButtonHTMLAttributes,
   HTMLAttributes,
   InputHTMLAttributes,
+  SelectHTMLAttributes,
 } from "react";
 
 type ButtonVariant = "primary" | "secondary" | "filled";
@@ -83,6 +85,136 @@ export function Input({
       id={id}
       {...props}
     />
+  );
+}
+
+export function Select({
+  className,
+  label,
+  id,
+  children,
+  onBlur,
+  onChange,
+  onFocus,
+  onKeyDown,
+  onMouseDown,
+  ...props
+}: SelectHTMLAttributes<HTMLSelectElement> & { label?: string }) {
+  const [isOpen, setIsOpen] = useState(false);
+  const select = (
+    <div className="relative min-w-0">
+      <select
+        className={clsx(
+          "min-w-0 w-full appearance-none rounded-lg border border-slate-700 outline-none",
+          "bg-slate-950 px-3 py-2 pr-10",
+          "font-mono text-slate-100",
+          "focus:border-cyan-400",
+          "disabled:cursor-not-allowed disabled:opacity-50",
+          className,
+        )}
+        id={id}
+        onBlur={(event) => {
+          setIsOpen(false);
+          onBlur?.(event);
+        }}
+        onFocus={(event) => {
+          setIsOpen(true);
+          onFocus?.(event);
+        }}
+        onChange={(event) => {
+          setIsOpen(false);
+          onChange?.(event);
+        }}
+        onKeyDown={(event) => {
+          if (event.key === "Escape") setIsOpen(false);
+          onKeyDown?.(event);
+        }}
+        onMouseDown={(event) => {
+          setIsOpen((open) => !open);
+          onMouseDown?.(event);
+        }}
+        {...props}
+      >
+        {children}
+      </select>
+      <span
+        aria-hidden="true"
+        className="pointer-events-none absolute right-3 top-1/2 -translate-y-1/2 text-slate-400"
+      >
+        {isOpen ? "⏶" : "⏷"}
+      </span>
+    </div>
+  );
+
+  return label ? (
+    <div>
+      <label className="block text-sm text-slate-400" htmlFor={id}>
+        {label}
+      </label>
+      {select}
+    </div>
+  ) : (
+    select
+  );
+}
+
+export function Checkbox({
+  className,
+  label,
+  id,
+  ...props
+}: InputHTMLAttributes<HTMLInputElement> & { label?: string }) {
+  const checkbox = (
+    <input
+      className={clsx(
+        "h-4 w-4 accent-cyan-400",
+        "disabled:cursor-not-allowed disabled:opacity-50",
+        className,
+      )}
+      id={id}
+      type="checkbox"
+      {...props}
+    />
+  );
+
+  return label ? (
+    <label
+      className="flex items-center gap-2 self-end pb-2 text-sm text-slate-400"
+      htmlFor={id}
+    >
+      {checkbox}
+      {label}
+    </label>
+  ) : (
+    checkbox
+  );
+}
+
+export function InfoPopup({
+  message,
+  label = "Info",
+}: {
+  message: string;
+  label?: string;
+}) {
+  const [open, setOpen] = useState(false);
+
+  return (
+    <div className="relative shrink-0">
+      <button
+        aria-expanded={open}
+        className="rounded border border-slate-700 px-2 py-1 text-sm text-slate-400 hover:border-cyan-400 hover:text-cyan-300"
+        onClick={() => setOpen((isOpen) => !isOpen)}
+        type="button"
+      >
+        {label}
+      </button>
+      {open && (
+        <div className="absolute right-0 top-10 z-10 w-56 rounded-lg border border-slate-700 bg-slate-950 p-3 text-sm text-slate-300 shadow-xl">
+          {message}
+        </div>
+      )}
+    </div>
   );
 }
 

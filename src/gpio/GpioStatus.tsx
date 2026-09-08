@@ -1,24 +1,67 @@
 import { CardPanel } from "../layouts/Section";
 import clsx from "clsx";
+import type { ReactNode } from "react";
 import { useGpioUI } from "./useGpioUI";
 
-export function GpioStatus({ pin }: { pin: number }) {
-  const { getPinLabel, getPinStatus, isConnected } = useGpioUI();
+export function GpioStatus({
+  pin,
+  children,
+}: {
+  pin: number;
+  children?: ReactNode;
+}) {
+  const {
+    getPinLabel,
+    getPinMode,
+    getPinStatus,
+    getPinValue,
+    isConnected,
+  } = useGpioUI();
+  const value = getPinValue(pin);
 
   return (
-    <CardPanel className="flex items-center justify-between w-40" key={pin}>
-      <div className="flex flex-col items-start gap-2">
+    <CardPanel
+      className="relative flex min-h-28 w-full flex-col gap-4"
+      key={pin}
+    >
+      <div className="flex w-full items-center justify-between gap-3 pt-1">
         <div
           className={clsx(
-            "h-2 w-8 rounded-full font-bold mb-2",
+            "absolute inset-x-0 top-0 h-1",
             isConnected ? "bg-emerald-400" : "bg-rose-400",
           )}
         />
-        <span className="font-mono text-lg text-slate-100">
-          {getPinLabel(pin)}
-        </span>
-        <span className="text-sm text-slate-400">{getPinStatus(pin)}</span>
+        <div className="min-w-0">
+          <span className="block whitespace-nowrap font-mono text-lg text-slate-100">
+            {getPinLabel(pin)}
+          </span>
+          <span className="block text-xs uppercase tracking-wide text-slate-500">
+            {getPinMode(pin)}
+          </span>
+        </div>
+        {typeof value === "boolean" ? (
+          <div className="flex items-center gap-3 rounded-full border border-slate-800 bg-slate-950/70 px-3 py-2">
+            <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
+              {value ? "High" : "Low"}
+            </span>
+            <span
+              aria-label={value ? "High" : "Low"}
+              className={clsx(
+                "h-5 w-5 rounded-full border-2 border-slate-700 shadow-inner transition-colors",
+                value
+                  ? "bg-emerald-400 shadow-[0_0_12px_rgba(52,211,153,0.8)]"
+                  : "bg-rose-400 shadow-[0_0_12px_rgba(251,113,133,0.8)]",
+              )}
+              role="img"
+            />
+          </div>
+        ) : (
+          <span className="min-w-0 max-w-1/2 truncate rounded-md border border-slate-800 px-2 py-1 text-sm text-slate-400">
+            {getPinStatus(pin)}
+          </span>
+        )}
       </div>
+      {children}
     </CardPanel>
   );
 }

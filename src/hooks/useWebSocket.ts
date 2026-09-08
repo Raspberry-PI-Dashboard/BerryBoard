@@ -1,6 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { WebSocketMessage, WebSocketRequest } from "../ws/protocol";
-import { urlCookieName } from "../context/WebSocketProvider";
 
 type ConnectionStatus = "Connecting" | "Connected" | "Disconnected" | "Error";
 
@@ -22,10 +21,6 @@ export function getWebSocketUrlError(url: string) {
   } catch {
     return "Enter a valid WebSocket URL";
   }
-}
-
-export function saveUrl(url: string) {
-  document.cookie = `${urlCookieName}=${encodeURIComponent(url)}; max-age=31536000; path=/`;
 }
 
 export function useWebSocket(initialUrl: string): UseWebSocketResult {

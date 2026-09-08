@@ -1,10 +1,17 @@
-import { useGpio } from "../hooks/useGpio";
+import { useGpioContext } from "../context/GpioContext";
 
 export function useGpioUI() {
-  const { pinValues, ...gpio } = useGpio();
+  const { pinValues, ...gpio } = useGpioContext();
 
   // UI
   function getPinStatus(pin: number): string {
+    if (!gpio.monitoredPins.get(pin)) return "Not monitored";
+
+    if (gpio.pinModes.get(pin) === "pwm") {
+      const pwm = gpio.pwmValues.get(pin);
+      return pwm ? `${pwm.duty_cycle}%` : "PWM unavailable";
+    }
+
     const response = pinValues.get(pin);
     return response ? (response.value ? "High" : "Low") : "No reading";
   }
@@ -13,18 +20,26 @@ export function useGpioUI() {
     return "GPIO " + pin;
   }
 
-  function getPinMode(pin: number): string {
-    return pin + " Mode: To be implemented";
+  function getPinModeValue(pin: number) {
+    return gpio.pinModes.get(pin);
+  }
 
-    // const response = pinValues.get(pin);
-    // return response ? response.mode : "Unknown";
+  function getPinValue(pin: number) {
+    return pinValues.get(pin)?.value;
+  }
+
+  function getPinMode(pin: number): string {
+    const mode = getPinModeValue(pin);
+    return mode ? mode[0].toUpperCase() + mode.slice(1) : "Unknown";
   }
 
   // Return the original gpio object along with the UI functions
   return {
     ...gpio,
     getPinLabel,
+    getPinModeValue,
     getPinStatus,
+    getPinValue,
     getPinMode,
   };
 }

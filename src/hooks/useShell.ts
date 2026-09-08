@@ -41,12 +41,17 @@ export function useShell() {
     if (command && sendMessage(message)) callback();
   }
 
+  function cancelCommand() {
+    sendMessage({ type: "shell_input", data: "\u0003" });
+  }
+
   return {
     isConnected,
     shellStarted,
     shellMessages,
     shellErrors,
     runCommand,
+    cancelCommand,
     startShell,
   };
 }
