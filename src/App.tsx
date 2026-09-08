@@ -1,12 +1,13 @@
-import { ShellWebSocket } from "./components/ShellWebSocket";
 import { WebSocketStatus } from "./components/WebSocketStatus";
-import { GpioMonitor } from "./gpio/GpioMonitor";
 import { GpioSettings } from "./gpio/GpioSettings";
 import { WebSocketProvider } from "./context/WebSocketProvider";
 import { GpioProvider } from "./context/GpioProvider";
 import { Sidebar } from "./components/Sidebar";
 import type { Page } from "./components/Sidebar";
 import { useState } from "react";
+import { Background } from "./dashboard/Background";
+import { GpioMonitor } from "./gpio/GpioMonitor";
+import { ShellWebSocket } from "./components/ShellWebSocket";
 
 const defaultUrl = import.meta.env.VITE_WEBSOCKET_URL ?? "ws://localhost:8080";
 function App() {
@@ -33,7 +34,7 @@ function AppContent({
       <header>
         <Sidebar activePage={activePage} onNavigate={onNavigate} />
       </header>
-      <main className="min-h-screen flex flex-col gap-6 px-6 py-12">
+      <Background>
         {activePage === "settings" ? (
           <>
             <WebSocketStatus />
@@ -45,7 +46,7 @@ function AppContent({
             <ShellWebSocket />
           </>
         )}
-      </main>
+      </Background>
     </div>
   );
 }

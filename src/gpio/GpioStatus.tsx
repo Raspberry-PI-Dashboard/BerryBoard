@@ -11,7 +11,7 @@ export function GpioStatus({ pin }: { pin: number }) {
         <div
           className={clsx(
             "h-2 w-8 rounded-full font-bold mb-2",
-            isConnected ? "bg-green-500" : "bg-red-500",
+            isConnected ? "bg-emerald-400" : "bg-rose-400",
           )}
         />
         <span className="font-mono text-lg text-slate-100">

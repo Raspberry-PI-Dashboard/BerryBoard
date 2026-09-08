@@ -99,9 +99,9 @@ export function Badge({
         "rounded-full border border-slate-700",
         "px-2 p-1",
         "text-sm text-slate-300",
-        variant === "ok" && "bg-green-800",
-        variant === "warning" && "bg-amber-500",
-        variant === "error" && "border-red-900 bg-red-950 text-red-300",
+        variant === "ok" && "bg-emerald-800 text-emerald-200",
+        variant === "warning" && "bg-amber-400 text-slate-950",
+        variant === "error" && "border-rose-900 bg-rose-950 text-rose-300",
         className,
       )}
       {...props}

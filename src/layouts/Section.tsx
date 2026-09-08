@@ -14,7 +14,7 @@ export function Section({
     <section
       className={clsx(
         "mx-auto w-full max-w-2xl",
-        "rounded-2xl border border-slate-800 bg-slate-900 shadow-2xl",
+        "rounded-2xl border border-cyan-400/60 bg-slate-900 neon-border-inset",
         "p-8",
         // "flex flex-col gap-6 items-start",
         className,
@@ -65,15 +65,15 @@ export function SectionError({
     <div
       className={clsx(
         "mt-3 px-3 py-2",
-        "rounded-lg border border-red-900 bg-red-950/50",
-        "text-sm text-red-300",
+        "rounded-lg border border-rose-900 bg-rose-950/50",
+        "text-sm text-rose-300",
         className,
       )}
       role="alert"
       {...props}
     >
       {Title && (
-        <h2 className="mb-2 text-sm font-semibold uppercase tracking-[0.15em] text-red-300">
+        <h2 className="mb-2 text-sm font-semibold uppercase tracking-[0.15em] text-rose-300">
           {Title}
         </h2>
       )}
@@ -114,7 +114,7 @@ export function Subsection({
   return (
     <div
       className={clsx(
-        "rounded-lg border border-slate-800 bg-slate-950 p-4",
+        "rounded-lg border border-cyan-400/35 bg-slate-950 p-4 neon-border-inset",
         className,
       )}
       {...props}
