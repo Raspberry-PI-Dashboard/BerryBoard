@@ -21,7 +21,7 @@ export function GpioStatus({
 
   return (
     <CardPanel
-      className="relative flex min-h-28 w-full flex-col gap-4"
+      className="relative flex min-h-28 w-full flex-col gap-4 theme-widget border-cyan-400/25"
       key={pin}
     >
       <div className="flex w-full items-center justify-between gap-3 pt-1">
@@ -35,12 +35,12 @@ export function GpioStatus({
           <span className="block whitespace-nowrap font-mono text-lg text-slate-100">
             {getPinLabel(pin)}
           </span>
-          <span className="block text-xs uppercase tracking-wide text-slate-500">
+          <span className="block text-xs uppercase tracking-wide text-cyan-200/60">
             {getPinMode(pin)}
           </span>
         </div>
         {typeof value === "boolean" ? (
-          <div className="flex items-center gap-3 rounded-full border border-slate-800 bg-slate-950/70 px-3 py-2">
+          <div className="flex items-center gap-3 rounded-full border border-slate-800 theme-panel px-3 py-2">
             <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
               {value ? "High" : "Low"}
             </span>
@@ -56,7 +56,7 @@ export function GpioStatus({
             />
           </div>
         ) : (
-          <span className="min-w-0 max-w-1/2 truncate rounded-md border border-slate-800 px-2 py-1 text-sm text-slate-400">
+          <span className="min-w-0 max-w-1/2 truncate rounded-md border border-cyan-400/25 px-2 py-1 text-sm text-cyan-100/70">
             {getPinStatus(pin)}
           </span>
         )}

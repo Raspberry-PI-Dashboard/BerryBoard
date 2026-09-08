@@ -48,18 +48,18 @@ export function Input({
 }: InputHTMLAttributes<HTMLInputElement> & { label?: string }) {
   if (label) {
     return (
-      <div>
+      <div className="min-w-0 flex-1">
         <label className="block text-sm text-slate-400" htmlFor={id}>
           {label}
         </label>
         <input
           className={clsx(
             "min-w-0 flex-1",
-            "rounded-lg border border-slate-700 outline-none",
-            "bg-slate-950",
+            "rounded-lg border border-cyan-400/35 outline-none",
+            "theme-panel",
             "px-3 py-2",
             "font-mono text-slate-100",
-            "focus:border-cyan-400",
+            "focus:border-cyan-300 focus:ring-1 focus:ring-cyan-300/40",
             "disabled:cursor-not-allowed disabled:opacity-50",
             className,
           )}
@@ -74,11 +74,11 @@ export function Input({
     <input
       className={clsx(
         "min-w-0 flex-1",
-        "rounded-lg border border-slate-700 outline-none",
-        "bg-slate-950",
+        "rounded-lg border border-cyan-400/35 outline-none",
+        "theme-panel",
         "px-3 py-2",
         "font-mono text-slate-100",
-        "focus:border-cyan-400",
+        "focus:border-cyan-300 focus:ring-1 focus:ring-cyan-300/40",
         "disabled:cursor-not-allowed disabled:opacity-50",
         className,
       )}
@@ -106,7 +106,7 @@ export function Select({
       <select
         className={clsx(
           "min-w-0 w-full appearance-none rounded-lg border border-slate-700 outline-none",
-          "bg-slate-950 px-3 py-2 pr-10",
+          "theme-panel px-3 py-2 pr-10",
           "font-mono text-slate-100",
           "focus:border-cyan-400",
           "disabled:cursor-not-allowed disabled:opacity-50",
@@ -210,7 +210,7 @@ export function InfoPopup({
         {label}
       </button>
       {open && (
-        <div className="absolute right-0 top-10 z-10 w-56 rounded-lg border border-slate-700 bg-slate-950 p-3 text-sm text-slate-300 shadow-xl">
+        <div className="absolute right-0 top-10 z-10 w-56 rounded-lg border border-slate-700 theme-panel p-3 text-sm text-slate-300 shadow-xl">
           {message}
         </div>
       )}

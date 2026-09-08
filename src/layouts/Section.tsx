@@ -14,7 +14,7 @@ export function Section({
     <section
       className={clsx(
         "mx-auto w-full max-w-2xl",
-        "rounded-2xl border border-cyan-400/60 bg-slate-900 neon-border-inset",
+        "rounded-2xl border border-cyan-400/60 theme-section neon-border-inset",
         "p-4 sm:p-8",
         // "flex flex-col gap-6 items-start",
         className,
@@ -94,7 +94,7 @@ export function CardPanel({
       className={clsx(
         "overflow-y-auto scrollbar-none [&::-webkit-scrollbar]:hidden",
         "rounded-lg border border-slate-800",
-        "bg-slate-950",
+        "theme-panel",
         "p-4",
         "font-mono text-sm text-slate-300",
         className,
@@ -116,7 +116,7 @@ export function Subsection({
   return (
     <div
       className={clsx(
-        "rounded-lg border border-cyan-400/35 bg-slate-950 p-4 neon-border-inset",
+        "rounded-lg border border-cyan-400/35 theme-widget p-4 neon-border-inset",
         className,
       )}
       {...props}

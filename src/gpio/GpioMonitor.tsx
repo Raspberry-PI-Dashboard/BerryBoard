@@ -7,7 +7,7 @@ export function GpioMonitor() {
 
   return (
     <Section
-      className="flex h-full flex-col"
+      className="flex h-full flex-col theme-section"
       Title="GPIO Pinout"
       Accessory={"update: " + refreshInterval + "s"}
     >

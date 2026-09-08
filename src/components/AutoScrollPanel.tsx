@@ -35,7 +35,7 @@ export function AutoScrollPanel({
     <div className="group relative min-w-0">
       <button
         aria-label={copied ? "Content copied" : "Copy content"}
-        className="absolute right-2 top-2 z-10 rounded border border-slate-700 bg-slate-950 px-2 py-1 text-sm text-slate-400 opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100 hover:text-slate-100"
+        className="absolute right-2 top-2 z-10 rounded border border-slate-700 theme-panel px-2 py-1 text-sm text-slate-400 opacity-0 transition-opacity group-hover:opacity-100 focus-visible:opacity-100 hover:text-slate-100"
         onClick={() => {
           void navigator.clipboard.writeText(copyText).then(() => {
             setCopied(true);

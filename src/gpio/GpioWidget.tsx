@@ -10,7 +10,7 @@ export function GpioWidget() {
     .map(([pin]) => pin);
 
   return (
-    <Section className="h-full" Title="Monitored GPIO">
+    <Section className="h-full theme-section" Title="Monitored GPIO">
       {pins.length === 0 ? (
         <p className="text-sm text-slate-500">No GPIO pins are being monitored.</p>
       ) : (
