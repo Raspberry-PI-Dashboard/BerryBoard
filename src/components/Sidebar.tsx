@@ -85,7 +85,7 @@ export function Sidebar({
         {(
           [
             ["monitor", "Dashboard", "⌘"],
-            ["gpio", "GPIO", "⚙︎"],
+            ["gpio", "GPIO", "⚡︎"],
             ["i2c", "I2C", "↔"],
             ["settings", "Settings", "⚒︎"],
           ] as const
