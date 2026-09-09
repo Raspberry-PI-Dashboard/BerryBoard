@@ -52,13 +52,13 @@ export function Input({
 }: InputHTMLAttributes<HTMLInputElement> & { label?: string }) {
   if (label) {
     return (
-      <div className="min-w-0 flex-1">
-        <label className="block text-sm text-slate-400" htmlFor={id}>
+      <div className="min-w-0 flex-1 w-full">
+        <label className="block mb-1 ml-1 text-sm text-slate-400" htmlFor={id}>
           {label}
         </label>
         <input
           className={clsx(
-            "min-w-0 flex-1",
+            "min-w-0 flex-1 w-full",
             "rounded-md border border-cyan-400/35 outline-none",
             "theme-input",
             "px-3 py-2",
@@ -152,7 +152,7 @@ export function Select({
 
   return label ? (
     <div>
-      <label className="block text-sm text-slate-400" htmlFor={id}>
+      <label className="block text-sm mb-1 ml-1 text-slate-400" htmlFor={id}>
         {label}
       </label>
       {select}

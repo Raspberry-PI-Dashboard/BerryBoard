@@ -19,26 +19,30 @@ export function GpioCalibration() {
   return (
     <Section className="h-full" Title="PWM Calibration">
       <fieldset className="flex flex-col gap-4" disabled={!isConnected}>
-        <div className="text-sm text-slate-400">
-          GPIO {selectedPwmPin} is the available PWM pin.
+        <div className="flex flex-row flex-wrap gap-2 items-start justify-start">
+          <Input
+            label="Duty cycle (%)"
+            max={100}
+            min={0}
+            onChange={(event) =>
+              setDutyCycle(
+                Math.min(100, Math.max(0, Number(event.target.value))),
+              )
+            }
+            type="number"
+            value={dutyCycle}
+          />
+          <Input
+            label="Frequency (Hz)"
+            min={1}
+            onChange={(event) =>
+              setFrequency(Math.max(1, Number(event.target.value) || 1))
+            }
+            type="number"
+            value={frequency}
+          />
         </div>
-        <Input
-          label="Duty cycle (%)"
-          max={100}
-          min={0}
-          onChange={(event) =>
-            setDutyCycle(Math.min(100, Math.max(0, Number(event.target.value))))
-          }
-          type="number"
-          value={dutyCycle}
-        />
-        <Input
-          label="Frequency (Hz)"
-          min={1}
-          onChange={(event) => setFrequency(Math.max(1, Number(event.target.value) || 1))}
-          type="number"
-          value={frequency}
-        />
+
         <div className="flex flex-wrap gap-2">
           <Button
             onClick={() => setPinPWM(selectedPwmPin, dutyCycle, frequency)}
