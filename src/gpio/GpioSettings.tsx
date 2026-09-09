@@ -1,7 +1,5 @@
-import { useEffect, useState } from "react";
-import type { PinMode } from "../ws/protocol";
 import { CardPanel, Section, Subsection } from "../layouts/Section";
-import { Button, Checkbox, Select } from "../layouts/StyledComponents";
+import { Button, Select } from "../layouts/StyledComponents";
 import { useGpioUI } from "./useGpioUI";
 
 export function GpioSettings() {
@@ -9,34 +7,11 @@ export function GpioSettings() {
     pwmPins,
     selectedPwmPin,
     setSelectedPwmPin,
-    allowedPins,
-    pinModes,
-    monitoredPins,
-    setMonitoredPins,
-    setPinMode,
     isConnected,
   } = useGpioUI();
-  const [selectedPin, setSelectedPin] = useState(allowedPins[0]);
-  const [selectedMode, setSelectedMode] = useState<PinMode>(
-    pinModes.get(allowedPins[0]) ?? "input",
-  );
-  const supportsPwm = pwmPins.includes(selectedPin);
-
-  useEffect(() => {
-    if (!supportsPwm && selectedMode === "pwm") setSelectedMode("input");
-  }, [selectedMode, supportsPwm]);
-
-  function updateMonitoredPins(
-    event: React.ChangeEvent<HTMLInputElement>,
-    pin: number,
-  ) {
-    const checkboxValue = event.target.checked;
-    monitoredPins.set(pin, checkboxValue);
-    setMonitoredPins(monitoredPins);
-  }
 
   return (
-    <Section Title="GPIO Settings">
+    <Section Title="PWM Settings">
       <div className="flex flex-col gap-6">
         <fieldset className="contents" disabled={!isConnected}>
           <Subsection subtitle="PWM calibration">
@@ -52,62 +27,6 @@ export function GpioSettings() {
             </option>
           ))}
         </Select>
-          </Subsection>
-        </fieldset>
-
-        <div className="theme-divider" />
-
-        <fieldset className="contents" disabled={!isConnected}>
-          <Subsection subtitle="Select pin mode">
-        <p className="mb-4 text-sm text-slate-400">
-          PWM is available only on GPIO 18.
-        </p>
-        <fieldset
-          className="grid gap-4 sm:grid-cols-[minmax(0,1fr)_minmax(0,1fr)_auto] sm:items-end"
-          disabled={!isConnected}
-        >
-          <Select
-            id="mode-pin"
-            label="Pin"
-            onChange={(event) => {
-              const pin = Number(event.target.value);
-              setSelectedPin(pin);
-              setSelectedMode(pinModes.get(pin) ?? "input");
-            }}
-            value={selectedPin}
-          >
-              {allowedPins.map((pin) => (
-                <option key={pin} value={pin}>
-                  GPIO {pin}
-                </option>
-              ))}
-          </Select>
-
-          <Select
-            id="pin-mode"
-            label="Mode"
-            onChange={(event) => setSelectedMode(event.target.value as PinMode)}
-            value={selectedMode}
-          >
-              <option value="input">Input</option>
-              <option value="output">Output</option>
-              {supportsPwm && <option value="pwm">PWM</option>}
-          </Select>
-
-          <Checkbox
-            checked={monitoredPins.get(selectedPin) ?? false}
-            id="selected-pin-monitor"
-            label="Monitor"
-            onChange={(event) => updateMonitoredPins(event, selectedPin)}
-          />
-
-          <Button
-            onClick={() => setPinMode(selectedPin, selectedMode)}
-            type="button"
-          >
-            Apply mode
-          </Button>
-        </fieldset>
           </Subsection>
         </fieldset>
 

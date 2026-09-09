@@ -77,6 +77,7 @@ export function ShellWidget() {
         className="h-80"
         contentKey={shellMessages.length}
         copyText={shellOutputText}
+        disabled={!isConnected || !shellStarted}
       >
         {shellMessages.length === 0
           ? ""

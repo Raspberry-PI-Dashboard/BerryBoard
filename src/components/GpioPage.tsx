@@ -1,11 +1,11 @@
-import { DashboardSettings } from "./DashboardSettings";
 import { GpioConfiguration } from "../gpio/GpioConfiguration";
+import { GpioSettings } from "../gpio/GpioSettings";
 
-export function Configuration() {
+export function GpioPage() {
   return (
     <>
-      <DashboardSettings />
       <GpioConfiguration />
+      <GpioSettings />
     </>
   );
 }

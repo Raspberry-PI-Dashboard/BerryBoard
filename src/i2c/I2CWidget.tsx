@@ -84,7 +84,7 @@ export function I2CWidget() {
             </Button>
           </div>
           {(readBlockResponse || writeBlockResponse) && (
-            <output className="mt-3 block break-words font-mono text-sm text-slate-300">
+            <output className="mt-3 block wrap-break-word font-mono text-sm text-slate-300">
               Data: [{(readBlockResponse ?? writeBlockResponse)?.data.join(", ")}]
             </output>
           )}

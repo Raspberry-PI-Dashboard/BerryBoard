@@ -11,6 +11,7 @@ type AutoScrollPanelProps = HTMLAttributes<HTMLDivElement> & {
   children: ReactNode;
   contentKey: unknown;
   copyText: string;
+  disabled?: boolean;
 };
 
 export function AutoScrollPanel({
@@ -18,6 +19,7 @@ export function AutoScrollPanel({
   contentKey,
   copyText,
   className,
+  disabled,
   ...props
 }: AutoScrollPanelProps) {
   const panelRef = useRef<HTMLDivElement>(null);
@@ -43,6 +45,7 @@ export function AutoScrollPanel({
         }}
         title={copied ? "Content copied" : "Copy content"}
         type="button"
+        disabled={disabled}
       >
         ⧉
       </button>
