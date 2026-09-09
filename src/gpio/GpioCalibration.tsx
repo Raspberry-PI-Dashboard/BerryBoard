@@ -50,14 +50,14 @@ export function GpioCalibration() {
             Stop PWM
           </Button>
         </div>
-        <div className="text-sm text-slate-500">
+        <div className="text-sm text-slate-400">
           {currentPwm?.active
             ? `${currentPwm.duty_cycle}%${currentPwm.frequency ? ` at ${currentPwm.frequency}Hz` : ""}`
             : "PWM stopped"}
         </div>
       </fieldset>
       {pwmPins.length === 0 && (
-        <p className="text-sm text-slate-500">No PWM-capable pins available.</p>
+        <p className="text-sm text-slate-400">No PWM-capable pins available.</p>
       )}
     </Section>
   );

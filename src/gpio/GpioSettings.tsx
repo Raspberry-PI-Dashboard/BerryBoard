@@ -39,8 +39,9 @@ export function GpioSettings() {
 
   return (
     <Section Title="GPIO Settings">
-      <fieldset className="flex flex-col gap-6" disabled={!isConnected}>
-        <Subsection>
+      <div className="flex flex-col gap-6">
+        <fieldset className="contents" disabled={!isConnected}>
+          <Subsection subtitle="Monitoring">
         <Input
           aria-label="GPIO refresh interval in seconds"
           className="w-24"
@@ -52,9 +53,13 @@ export function GpioSettings() {
           type="number"
           value={refreshInterval}
         />
-        </Subsection>
+          </Subsection>
+        </fieldset>
 
-        <Subsection subtitle="PWM calibration">
+        <div className="theme-divider" />
+
+        <fieldset className="contents" disabled={!isConnected}>
+          <Subsection subtitle="PWM calibration">
         <Select
           id="calibration-pin"
           label="PWM pin"
@@ -67,9 +72,13 @@ export function GpioSettings() {
             </option>
           ))}
         </Select>
-        </Subsection>
+          </Subsection>
+        </fieldset>
 
-        <Subsection subtitle="Select which pins to monitor">
+        <div className="theme-divider" />
+
+        <fieldset className="contents" disabled={!isConnected}>
+          <Subsection subtitle="Select which pins to monitor">
         <div className="grid grid-cols-[repeat(auto-fit,minmax(6rem,1fr))] gap-3">
           {allowedPins.map((pin) => {
             return (
@@ -84,10 +93,14 @@ export function GpioSettings() {
             );
           })}
         </div>
-        </Subsection>
+          </Subsection>
+        </fieldset>
 
-        <Subsection subtitle="Select pin mode">
-        <p className="mb-4 text-sm text-slate-500">
+        <div className="theme-divider" />
+
+        <fieldset className="contents" disabled={!isConnected}>
+          <Subsection subtitle="Select pin mode">
+        <p className="mb-4 text-sm text-slate-400">
           PWM is available only on GPIO 18.
         </p>
         <fieldset
@@ -136,9 +149,10 @@ export function GpioSettings() {
             Apply mode
           </Button>
         </fieldset>
-        </Subsection>
+          </Subsection>
+        </fieldset>
 
-      </fieldset>
+      </div>
     </Section>
   );
 }

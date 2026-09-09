@@ -40,7 +40,7 @@ export function GpioStatus({
           </span>
         </div>
         {typeof value === "boolean" ? (
-          <div className="flex items-center gap-3 rounded-full border border-slate-800 theme-panel px-3 py-2">
+          <div className="flex items-center gap-3 rounded-md border border-slate-800 theme-panel px-3 py-2">
             <span className="text-xs font-semibold uppercase tracking-wider text-slate-400">
               {value ? "High" : "Low"}
             </span>

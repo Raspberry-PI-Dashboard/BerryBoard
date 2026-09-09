@@ -1,4 +1,18 @@
 @layer utilities {
+    .sidebar-status-dot {
+        animation: sidebar-status-blink 1.4s ease-in-out infinite;
+    }
+
+    @keyframes sidebar-status-blink {
+        0%,
+        100% {
+            opacity: 1;
+        }
+        50% {
+            opacity: 0.28;
+        }
+    }
+
     .sidebar-background {
         background-color: #010b0d;
         background-image: radial-gradient(

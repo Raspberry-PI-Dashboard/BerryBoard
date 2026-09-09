@@ -11,17 +11,17 @@ type ButtonVariant = "primary" | "secondary" | "filled";
 
 const ButtonVariantClasses: Record<ButtonVariant, string | string[]> = {
   primary: [
-    "rounded-lg border border-cyan-400",
+    "rounded-md border border-cyan-400",
     "font-semibold text-cyan-300",
     "disabled:cursor-not-allowed disabled:opacity-40",
   ],
   secondary: [
-    "rounded-lg border border-slate-700",
+    "rounded-md border border-slate-700",
     "text-slate-300",
     "disabled:cursor-not-allowed disabled:opacity-40",
   ],
   filled: [
-    "rounded-lg bg-cyan-400",
+    "rounded-md bg-cyan-400",
     "font-semibold text-slate-950",
     "disabled:cursor-not-allowed disabled:opacity-40",
   ],
@@ -34,7 +34,11 @@ export function Button({
 }: ButtonHTMLAttributes<HTMLButtonElement> & { variant?: ButtonVariant }) {
   return (
     <button
-      className={clsx("px-4 py-2", ButtonVariantClasses[variant], className)}
+      className={clsx(
+        "cursor-pointer px-4 py-2 theme-button",
+        ButtonVariantClasses[variant],
+        className,
+      )}
       {...props}
     />
   );
@@ -55,8 +59,8 @@ export function Input({
         <input
           className={clsx(
             "min-w-0 flex-1",
-            "rounded-lg border border-cyan-400/35 outline-none",
-            "theme-panel",
+            "rounded-md border border-cyan-400/35 outline-none",
+            "theme-input",
             "px-3 py-2",
             "font-mono text-slate-100",
             "focus:border-cyan-300 focus:ring-1 focus:ring-cyan-300/40",
@@ -74,8 +78,8 @@ export function Input({
     <input
       className={clsx(
         "min-w-0 flex-1",
-        "rounded-lg border border-cyan-400/35 outline-none",
-        "theme-panel",
+        "rounded-md border border-cyan-400/35 outline-none",
+        "theme-input",
         "px-3 py-2",
         "font-mono text-slate-100",
         "focus:border-cyan-300 focus:ring-1 focus:ring-cyan-300/40",
@@ -105,8 +109,8 @@ export function Select({
     <div className="relative min-w-0">
       <select
         className={clsx(
-          "min-w-0 w-full appearance-none rounded-lg border border-slate-700 outline-none",
-          "theme-panel px-3 py-2 pr-10",
+          "min-w-0 w-full appearance-none rounded-md border border-slate-700 outline-none",
+          "theme-input px-3 py-2 pr-10",
           "font-mono text-slate-100",
           "focus:border-cyan-400",
           "disabled:cursor-not-allowed disabled:opacity-50",
@@ -203,14 +207,14 @@ export function InfoPopup({
     <div className="relative shrink-0">
       <button
         aria-expanded={open}
-        className="rounded border border-slate-700 px-2 py-1 text-sm text-slate-400 hover:border-cyan-400 hover:text-cyan-300"
+        className="rounded-md border border-slate-700 px-2 py-1 text-sm text-slate-400 hover:border-cyan-400 hover:text-cyan-300"
         onClick={() => setOpen((isOpen) => !isOpen)}
         type="button"
       >
         {label}
       </button>
       {open && (
-        <div className="absolute right-0 top-10 z-10 w-56 rounded-lg border border-slate-700 theme-panel p-3 text-sm text-slate-300 shadow-xl">
+        <div className="absolute right-0 top-10 z-10 w-56 rounded-md border border-slate-700 theme-panel p-3 text-sm text-slate-300 shadow-xl">
           {message}
         </div>
       )}
@@ -228,12 +232,15 @@ export function Badge({
   return (
     <span
       className={clsx(
-        "rounded-full border border-slate-700",
+        "rounded-full",
         "px-2 p-1",
-        "text-sm text-slate-300",
-        variant === "ok" && "bg-emerald-800 text-emerald-200",
-        variant === "warning" && "bg-amber-400 text-slate-950",
-        variant === "error" && "border-rose-900 bg-rose-950 text-rose-300",
+        "text-sm",
+        variant === "ok" &&
+          "border border-emerald-300 bg-emerald-400 text-slate-950",
+        variant === "warning" &&
+          "border border-amber-300 bg-amber-400 text-slate-950",
+        variant === "error" &&
+          "border border-rose-400/50 bg-rose-400/10 text-rose-300 shadow-[inset_0_0_10px_rgba(251,113,133,0.28)]",
         className,
       )}
       {...props}

@@ -1,5 +1,5 @@
 import clsx from "clsx";
-import { WebSocketStatusMini } from "./WebSocketStatus";
+import { useWebSocketContext } from "../context/WebSocketContext";
 import "./Sidebar.css";
 
 export type Page = "monitor" | "settings";
@@ -17,6 +17,12 @@ export function Sidebar({
   open: sidebarOpen,
   onToggle,
 }: SidebarProps) {
+  const { status } = useWebSocketContext();
+  const statusColor =
+    status === "Connected"
+      ? "bg-emerald-400 shadow-[0_0_10px_rgba(52,211,153,0.8)]"
+      : "bg-rose-400 shadow-[0_0_10px_rgba(251,113,133,0.8)]";
+
   return (
     <aside
       className={clsx(
@@ -42,8 +48,8 @@ export function Sidebar({
           "cursor-pointer",
         )}
       >
-        <div className="ml-3 flex h-9 w-9 shrink-0 items-center justify-center rounded-lg bg-cyan-400 font-bold text-slate-950">
-           <img alt="BerryBoard" className="h-full w-full rounded-md" src="/favicon.svg" />
+          <div className="ml-3 flex h-9 w-9 shrink-0 items-center justify-center rounded-md bg-cyan-400 font-bold text-slate-950">
+            <img alt="BerryBoard" className="h-full w-full rounded-sm" src="/favicon.svg" />
         </div>
 
         <span
@@ -58,6 +64,17 @@ export function Sidebar({
         >
           BerryBoard
         </span>
+        <span
+          aria-label={`WebSocket ${status}`}
+          className={clsx(
+            "sidebar-status-dot h-2.5 w-2.5 shrink-0 rounded-full",
+            "hidden sm:block",
+            !sidebarOpen && "sm:hidden",
+            statusColor,
+          )}
+          role="status"
+          title={`WebSocket ${status}`}
+        />
       </div>
 
       <nav className="flex flex-col gap-1 p-2" aria-label="Primary navigation">
@@ -69,7 +86,7 @@ export function Sidebar({
         ).map(([page, label, icon]) => (
           <button
             className={clsx(
-              "flex items-center gap-2 rounded-lg px-3 py-2 text-left transition-colors",
+              "flex items-center gap-2 rounded-md px-3 py-2 text-left transition-colors",
               activePage === page
                 ? "bg-cyan-400/10 text-cyan-300"
                 : "text-slate-400 hover:bg-slate-900 hover:text-slate-100",
@@ -100,9 +117,6 @@ export function Sidebar({
         ))}
       </nav>
 
-      <div onClick={(e) => e.stopPropagation()}>
-        <WebSocketStatusMini isOpen={sidebarOpen} />
-      </div>
     </aside>
   );
 }
