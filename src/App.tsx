@@ -41,7 +41,7 @@ function AppContent({
   onSidebarToggle: () => void;
 }) {
   return (
-    <div className="flex min-h-screen overflow-x-hidden bg-slate-950 text-slate-100">
+    <div className="theme-page flex min-h-screen overflow-x-hidden">
       <header className={sidebarOpen ? "w-16 shrink-0 sm:w-64" : "w-16 shrink-0"}>
         <Sidebar
           activePage={activePage}
