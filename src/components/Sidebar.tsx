@@ -2,7 +2,7 @@ import clsx from "clsx";
 import { useWebSocketContext } from "../context/WebSocketContext";
 import "./Sidebar.css";
 
-export type Page = "monitor" | "settings";
+export type Page = "monitor" | "configuration" | "settings";
 
 type SidebarProps = {
   activePage: Page;
@@ -81,6 +81,7 @@ export function Sidebar({
         {(
           [
             ["monitor", "Dashboard", "⌘"],
+            ["configuration", "Configuration", "⚙︎"],
             ["settings", "Settings", "⚒︎"],
           ] as const
         ).map(([page, label, icon]) => (

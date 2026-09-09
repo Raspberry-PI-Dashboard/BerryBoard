@@ -1,17 +1,15 @@
 import { useEffect, useState } from "react";
 import type { PinMode } from "../ws/protocol";
 import { CardPanel, Section, Subsection } from "../layouts/Section";
-import { Button, Checkbox, Input, Select } from "../layouts/StyledComponents";
+import { Button, Checkbox, Select } from "../layouts/StyledComponents";
 import { useGpioUI } from "./useGpioUI";
 
 export function GpioSettings() {
   const {
-    refreshInterval,
-    setRefreshInterval,
-    allowedPins,
     pwmPins,
     selectedPwmPin,
     setSelectedPwmPin,
+    allowedPins,
     pinModes,
     monitoredPins,
     setMonitoredPins,
@@ -29,10 +27,10 @@ export function GpioSettings() {
   }, [selectedMode, supportsPwm]);
 
   function updateMonitoredPins(
-    e: React.ChangeEvent<HTMLInputElement, HTMLInputElement>,
+    event: React.ChangeEvent<HTMLInputElement>,
     pin: number,
   ) {
-    const checkboxValue = e.target.checked;
+    const checkboxValue = event.target.checked;
     monitoredPins.set(pin, checkboxValue);
     setMonitoredPins(monitoredPins);
   }
@@ -40,24 +38,6 @@ export function GpioSettings() {
   return (
     <Section Title="GPIO Settings">
       <div className="flex flex-col gap-6">
-        <fieldset className="contents" disabled={!isConnected}>
-          <Subsection subtitle="Monitoring">
-        <Input
-          aria-label="GPIO refresh interval in seconds"
-          className="w-24"
-          label="Refresh interval (s)"
-          min={1}
-          onChange={(event) => {
-            setRefreshInterval(Math.max(1, Number(event.target.value) || 1));
-          }}
-          type="number"
-          value={refreshInterval}
-        />
-          </Subsection>
-        </fieldset>
-
-        <div className="theme-divider" />
-
         <fieldset className="contents" disabled={!isConnected}>
           <Subsection subtitle="PWM calibration">
         <Select
@@ -72,27 +52,6 @@ export function GpioSettings() {
             </option>
           ))}
         </Select>
-          </Subsection>
-        </fieldset>
-
-        <div className="theme-divider" />
-
-        <fieldset className="contents" disabled={!isConnected}>
-          <Subsection subtitle="Select which pins to monitor">
-        <div className="grid grid-cols-[repeat(auto-fit,minmax(6rem,1fr))] gap-3">
-          {allowedPins.map((pin) => {
-            return (
-              <div className="flex min-w-0" key={pin}>
-                <Checkbox
-                  checked={monitoredPins.get(pin) ?? false}
-                  label={`GPIO ${pin}`}
-                  type="checkbox"
-                  onChange={(e) => updateMonitoredPins(e, pin)}
-                />
-              </div>
-            );
-          })}
-        </div>
           </Subsection>
         </fieldset>
 

@@ -1,7 +1,7 @@
 import { WebSocketStatus } from "./components/WebSocketStatus";
 import { GpioSettings } from "./gpio/GpioSettings";
 import { I2CSettings } from "./i2c/I2CSettings";
-import { DashboardSettings } from "./components/DashboardSettings";
+import { Configuration } from "./components/Configuration";
 import { WebSocketProvider } from "./context/WebSocketProvider";
 import { GpioProvider } from "./context/GpioProvider";
 import { Sidebar } from "./components/Sidebar";
@@ -53,10 +53,11 @@ function AppContent({
       <Background>
         <div className="min-w-0 px-4 py-6 sm:px-6 sm:py-10 lg:px-10">
           <div className="mx-auto flex w-full max-w-6xl flex-col gap-6">
-          {activePage === "settings" ? (
+          {activePage === "configuration" ? (
+            <Configuration />
+          ) : activePage === "settings" ? (
             <>
               <WebSocketStatus />
-              <DashboardSettings />
               <GpioSettings />
               <I2CSettings />
             </>
